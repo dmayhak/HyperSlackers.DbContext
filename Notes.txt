@@ -1,0 +1,14 @@
+Just some quick access stuff to keep handy...
+
+
+
+// create the InitialCreate migration (overwrites the existing one)
+// (in package manager console)
+add-migration InitialCreate -force
+
+
+// to stop and delete the database
+// (in package manager console)
+sqllocaldb.exe stop mssqllocaldb
+sqllocaldb.exe delete mssqllocaldb
+// then delete the database file if you want to start "clean"
