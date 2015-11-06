@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbContext", "DbContext\DbCo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{EE7C7CE9-DAD2-45B7-8C70-8BEE87B81B14}"
 	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
 		Notes.txt = Notes.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
