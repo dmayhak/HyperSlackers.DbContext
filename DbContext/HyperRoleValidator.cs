@@ -121,30 +121,39 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             {
                 errors.Add(String.Format("Role name cannot be empty."));
             }
+
+            if (role.IsGlobal)
+            {
+                // check if the role already exists
+                // either as a system role or on any host
+                var roleId = role.Id;
+                var roleName = role.Name;
+                List<TRole> existingRoles = Manager.Roles.Where(r => r.Name == roleName).ToList();
+
+                if (existingRoles.Any(r => !r.Id.Equals(roleId)))
+                {
+                    errors.Add(String.Format("Role '{0}' already exists.", role.Name));
+                }
+            }
             else
             {
-                if (role.IsGlobal)
-                {
-                    // check if the role already exists
-                    // either as a system role or on any host
-                    var roleId = role.Id;
-                    var roleName = role.Name;
-                    List<TRole> existingRoles = Manager.Roles.Where(r => r.Name == roleName).ToList();
+                // role cannot exist in host
+                var roleId = role.Id;
+                var roleName = role.Name;
+                var hostId = role.HostId;
+                List<TRole> existingHostRoles = Manager.Roles.Where(r => r.Name == roleName && r.HostId.Equals(hostId)).ToList();
 
-                    if (existingRoles.Any(r => !r.Id.Equals(roleId)))
-                    {
-                        errors.Add(String.Format("Role '{0}' already exists.", role.Name));
-                    }
-                }
-                else
+                if (existingHostRoles.Any(r => !r.Id.Equals(roleId)))
                 {
-                    // check if the role already exists
-                    // either as a system role or on this particular host
-                    var existing = await Manager.FindByNameAsync(Manager.HostId, role.Name);
-                    if (existing != null && !role.Id.Equals(existing.Id))
-                    {
-                        errors.Add(String.Format("Role '{0}' already exists.", role.Name));
-                    }
+                    errors.Add(String.Format("Role '{0}' already exists for host.", roleName));
+                }
+
+                // role cannot exist as global
+                List<TRole> existingGlobalRoles = Manager.Roles.Where(r => r.Name == roleName && r.IsGlobal == true).ToList();
+
+                if (existingGlobalRoles.Any(r => !r.Id.Equals(roleId)))
+                {
+                    errors.Add(String.Format("Role '{0}' already exists as global role.", roleName));
                 }
             }
 

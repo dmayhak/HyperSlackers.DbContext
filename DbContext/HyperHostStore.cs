@@ -142,14 +142,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <value>
         /// The hosts.
         /// </value>
-        public IQueryable<THost> Hosts
+        public virtual IQueryable<THost> GetHosts()
         {
-            get
-            {
-                ThrowIfDisposed();
+            ThrowIfDisposed();
 
-                return HyperContext.Set<THost>();
-            }
+            return HyperContext.Set<THost>();
         }
 
         /// <summary>
@@ -163,7 +160,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            //TODO: check for existing host and existing domains
+            // TODO: check for existing host and existing domains
 
             HyperContext.Set<THost>().Add(host);
 
@@ -261,13 +258,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <returns></returns>
-        public IList<string> GetDomains(TKey hostId)
+        public async Task<IList<string>> GetDomainsAsync(TKey hostId)
         {
             ThrowIfDisposed();
 
             var host = FindByIdAsync(hostId).Result;
 
-            return hostDomains.Where(d => d.HostId.Equals(host.Id)).Select(d => d.DomainName).ToList();
+            return await hostDomains.Where(d => d.HostId.Equals(host.Id)).Select(d => d.DomainName).ToListAsync();
         }
 
         /// <summary>

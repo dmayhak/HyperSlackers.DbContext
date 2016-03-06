@@ -115,6 +115,18 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
+        /// Gets the hosts.
+        /// </summary>
+        /// <param name="host">The host.</param>
+        /// <returns></returns>
+        public virtual IQueryable<THost> GetHosts()
+        {
+            ThrowIfDisposed();
+
+            return HyperHostStore.GetHosts();
+        }
+
+        /// <summary>
         /// Creates a new <see cref="HyperHost{TKey}"/> object in the data store.
         /// </summary>
         /// <param name="host">The host.</param>
@@ -228,11 +240,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <returns></returns>
-        public IList<string> GetDomains(TKey hostId)
+        public async Task<IList<string>> GetDomainsAsync(TKey hostId)
         {
             ThrowIfDisposed();
 
-            return HyperHostStore.GetDomains(hostId);
+            return await HyperHostStore.GetDomainsAsync(hostId);
         }
 
         /// <summary>

@@ -74,9 +74,6 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                 context.SaveChanges();
             }
 
-            //! temp test for cascade delete of child objects
-            hostManager.Delete(localHost);
-
             // add some global roles
             AddRole(context, systemHost.Id, "Super", true, true);
             AddRole(context, systemHost.Id, "User", true);
@@ -102,6 +99,54 @@ namespace HyperSlackers.DbContext.Demo.Migrations
 
             context.SaveChanges();
 
+            // create some users
+            // super
+            ApplicationUser user = new ApplicationUser() { HostId = systemHost.Id, UserName = "super@systemhost.com", Email = "super@systemhost.com", IsGlobal = true };
+            var result = userManager.Create(user, "super_system");
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(user.Id, "Super");
+                context.SaveChanges();
+            }
+            // admin - system
+            user = new ApplicationUser() { HostId = systemHost.Id, UserName = "admin@systemhost.com", Email = "admin@systemhost.com" };
+            result = userManager.Create(user, "admin_system");
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(systemHost.Id, user.Id, "Admin"); // systemhost's admin role
+                context.SaveChanges();
+            }
+            // admin - localhost
+            user = new ApplicationUser() { HostId = localHost.Id, UserName = "admin@localhost.com", Email = "admin@localhost.com" };
+            result = userManager.Create(user, "admin_local");
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(localHost.Id, user.Id, "Admin"); // localhost's admin role
+                context.SaveChanges();
+            }
+            // bob - system (NOT GLOBAL)
+            user = new ApplicationUser() { HostId = systemHost.Id, UserName = "bob@localhost.com", Email = "bob@localhost.com" };
+            result = userManager.Create(user, "bob_system");
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(user.Id, "User", true); // global user role
+                userManager.AddToRole(systemHost.Id, user.Id, "Player", true); // system player role (it's not a global role, so global param will get ignored)
+                context.SaveChanges();
+            }
+            // bob - localhost (NOT GLOBAL)
+            user = new ApplicationUser() { HostId = localHost.Id, UserName = "bob@localhost.com", Email = "bob@localhost.com" };
+            result = userManager.Create(user, "bob_local");
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(user.Id, "User", true); // global user role
+                userManager.AddToGroup(localHost.Id, user.Id, "Manager"); // localhost's manager group
+                context.SaveChanges();
+            }
         }
 
         // DRM Added

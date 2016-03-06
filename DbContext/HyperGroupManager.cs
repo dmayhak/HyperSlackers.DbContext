@@ -117,6 +117,56 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
+        /// Gets the system <see cref="HyperGroup{TKey}"/>s.
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<TGroup> GetSystemGroupsAsync()
+        {
+            ThrowIfDisabled();
+            ThrowIfDisposed();
+
+            return GetGroups(this.SystemHostId);
+        }
+
+        /// <summary>
+        /// Gets all <see cref="HyperGroup{TKey}" />s for the given host, plus global groups.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <returns></returns>
+        public IQueryable<TGroup> GetGroups(TKey hostId)
+        {
+            ThrowIfDisabled();
+            ThrowIfDisposed();
+
+            return HyperGroupStore.GetGroups(hostId);
+        }
+
+        /// <summary>
+        /// Gets all <see cref="HyperGroup{TKey}" />s for the current host, plus global groups.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <returns></returns>
+        public IQueryable<TGroup> GetGroups()
+        {
+            ThrowIfDisabled();
+            ThrowIfDisposed();
+
+            return HyperGroupStore.GetGroups();
+        }
+
+        /// <summary>
+        /// Gets all <see cref="HyperGroup{TKey}" />s..
+        /// </summary>
+        /// <returns></returns>
+        public IQueryable<TGroup> GetAllGroups()
+        {
+            ThrowIfDisabled();
+            ThrowIfDisposed();
+
+            return HyperGroupStore.GetAllGroups();
+        }
+
+        /// <summary>
         /// Creates a group for the current host (or global if global flag set)
         /// </summary>
         /// <param name="groupName">Name of the group.</param>
@@ -246,7 +296,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Finds a <see cref="HyperHGRoup{TKey}"/> by id.
+        /// Finds a <see cref="HyperGroup{TKey}"/> by id.
         /// </summary>
         /// <param name="hostId">The group identifier.</param>
         /// <returns></returns>
@@ -292,48 +342,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Gets the system <see cref="HyperGroup{TKey}"/>s.
-        /// </summary>
-        /// <returns></returns>
-        public IQueryable<TGroup> GetSystemGroupsAsync()
-        {
-            ThrowIfDisabled();
-            ThrowIfDisposed();
-
-            return GetGroups(this.SystemHostId);
-        }
-
-        /// <summary>
-        /// Gets all <see cref="HyperGroup{TKey}" />s for the given host, plus global groups.
-        /// </summary>
-        /// <param name="hostId">The host identifier.</param>
-        /// <returns></returns>
-        public IQueryable<TGroup> GetGroups(TKey hostId)
-        {
-            ThrowIfDisabled();
-            ThrowIfDisposed();
-
-            return HyperGroupStore.GetGroups(hostId);
-        }
-
-        /// <summary>
-        /// Gets all <see cref="HyperGroup{TKey}" />s..
-        /// </summary>
-        /// <returns></returns>
-        public IQueryable<TGroup> GetAllGroups()
-        {
-            ThrowIfDisabled();
-            ThrowIfDisposed();
-
-            return HyperGroupStore.GetAllGroups();
-        }
-
-        /// <summary>
         /// Gets the roles for the specified group.
         /// </summary>
         /// <param name="groupId">The group identifier.</param>
         /// <returns></returns>
-        public IList<TRole> GetRoles(TKey groupId)
+        public async Task<IList<TRole>> GetRolesAsync(TKey groupId)
         {
             Contract.Requires<ArgumentNullException>(groupId.Equals(default(TKey)), "groupId");
 
@@ -344,7 +357,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (group != null)
             {
-                return HyperGroupStore.GetRoles(group);
+                return await HyperGroupStore.GetRolesAsync(group);
             }
 
             return null;
@@ -355,7 +368,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="groupId">The group identifier.</param>
         /// <returns></returns>
-        public IList<TUser> GetUsers(TKey groupId)
+        public async Task<IList<TUser>> GetUsersAsync(TKey groupId)
         {
             Contract.Requires<ArgumentNullException>(groupId.Equals(default(TKey)), "groupId");
 
@@ -366,7 +379,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (group != null)
             {
-                return HyperGroupStore.GetUsers(group);
+                return await HyperGroupStore.GetUsersAsync(group);
             }
 
             return null;

@@ -153,10 +153,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> ValidateAsync(TUser item)
         {
-            if (item == null)
-            {
-                throw new ArgumentNullException("item");
-            }
+            Contract.Requires<ArgumentNullException>(item != null, "item");
+            //if (item == null)
+            //{
+            //    throw new ArgumentNullException("item");
+            //}
 
             var errors = new List<string>();
 
@@ -174,15 +175,18 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         private async Task ValidateUserName(TUser user, List<string> errors)
         {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(errors != null, "errors");
+
             if (user.UserName.IsNullOrWhiteSpace() || user.UserName.Trim().Length < MinimumUserNameLength)
             {
-                errors.Add("User name is too short.");
+                errors.Add("UserName is too short.");
                 return;
             }
 
             if (user.UserName.Trim().Length > MaximumUserNameLength)
             {
-                errors.Add("User name is too long.");
+                errors.Add("UserName is too long.");
                 return;
             }
 
@@ -192,14 +196,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 if (!Regex.IsMatch(user.UserName, ValidatorRegex))
                 {
                     // If we don't match the custom regex
-                    errors.Add("User name is invalid");
+                    errors.Add("UserName is invalid");
                     return;
                 }
             }
             else if (AllowOnlyAlphanumericUserNames && !Regex.IsMatch(user.UserName, @"^[A-Za-z0-9@_\.]+$"))
             {
                 // If any characters are not letters or digits, its an illegal user name
-                errors.Add("User name is invalid");
+                errors.Add("UserName is invalid");
                 return;
             }
 
@@ -208,21 +212,34 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 // global user cannot exist in any hosts
                 var userId = user.Id;
                 var userName = user.UserName;
-                List<TUser> existingUsers = Manager.Users.Where(u => u.UserName == userName).ToList();
+                List<TUser> existingUsers = Manager.AllUsers.Where(u => u.UserName == userName).ToList();
 
                 if (existingUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(String.Format("User '{0}' already exists in system.", user.UserName));
+                    errors.Add(String.Format("UserName '{0}' already exists in system.", user.UserName));
                     return;
                 }
             }
             else
             {
-                // user name must be unique to the host and cannot be a global one
-                var existing = await Manager.FindByNameAsync(Manager.HostId, user.UserName).WithCurrentCulture();
-                if (existing != null && !user.Id.Equals(existing.Id))
+                // user cannot exist in host
+                var userId = user.Id;
+                var userName = user.UserName;
+                var hostId = user.HostId;
+                List<TUser> existingHostUsers = Manager.AllUsers.Where(u => u.UserName == userName && u.HostId.Equals(hostId)).ToList();
+
+                if (existingHostUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(String.Format("User name {0} already exists.", user.UserName));
+                    errors.Add(String.Format("UserName '{0}' already exists for host.", user.UserName));
+                    return;
+                }
+
+                // user cannot exist as global
+                List<TUser> existingGlobalUsers = Manager.AllUsers.Where(u => u.UserName == userName && u.IsGlobal == true).ToList();
+
+                if (existingGlobalUsers.Any(u => !u.Id.Equals(userId)))
+                {
+                    errors.Add(String.Format("UserName '{0}' already exists as global user.", user.UserName));
                     return;
                 }
             }
@@ -231,6 +248,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         // make sure email is not empty, is valid, and is unique
         private async Task ValidateEmailAsync(TUser user, List<string> errors)
         {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(errors != null, "errors");
+
             var email = await Manager.HyperUserStore.GetEmailAsync(user).WithCurrentCulture();
             if (email.IsNullOrWhiteSpace())
             {
@@ -250,11 +270,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (RequireUniqueEmail)
             {
-                // check for duplicates for this host or system host
-                var owner = await Manager.FindByEmailAsync(Manager.HostId, email).WithCurrentCulture();
-                if (owner != null && !user.Id.Equals(owner.Id))
+                // user cannot exist in host
+                var userId = user.Id;
+                var hostId = user.HostId;
+                List<TUser> existingHostUsers = Manager.AllUsers.Where(u => u.Email == email && u.HostId.Equals(hostId)).ToList();
+
+                if (existingHostUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(String.Format("Email address {0} already exists.", email));
+                    errors.Add(String.Format("User Email '{0}' already exists for host.", email));
+                    return;
+                }
+
+                // user cannot exist as global
+                List<TUser> existingGlobalUsers = Manager.AllUsers.Where(u => u.Email == email && u.IsGlobal == true).ToList();
+
+                if (existingGlobalUsers.Any(u => !u.Id.Equals(userId)))
+                {
+                    errors.Add(String.Format("User Email '{0}' already exists as global user.", email));
+                    return;
                 }
             }
         }

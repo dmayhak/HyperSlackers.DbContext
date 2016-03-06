@@ -246,31 +246,16 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="user">The user.</param>
         /// <param name="groupName">Name of the group.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
         /// <returns></returns>
-        public virtual async Task AddToGroupAsync(TUser user, string groupName)
+        public virtual async Task AddToGroupAsync(TUser user, string groupName, bool global = false)
         {
             Contract.Requires<ArgumentNullException>(user != null, "user");
             Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
-            await AddToGroupAsync(this.HostId, user, groupName);
-        }
-
-        /// <summary>
-        /// Add a user to a group for the current host. Group must belong to current host or be a global group.
-        /// </summary>
-        /// <param name="user">The user.</param>
-        /// <param name="group">The group.</param>
-        /// <returns></returns>
-        public virtual async Task AddToGroupAsync(TUser user, TGroup group)
-        {
-            Contract.Requires<ArgumentNullException>(user != null, "user");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-
-            ThrowIfDisposed();
-
-            await AddToGroupAsync(this.HostId, user, group);
+            await AddToGroupAsync(this.HostId, user, groupName, global);
         }
 
         /// <summary>
@@ -279,9 +264,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="hostId">The host identifier.</param>
         /// <param name="user">The user.</param>
         /// <param name="groupName">Name of the role.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public virtual async Task AddToGroupAsync(TKey hostId, TUser user, string groupName)
+        public virtual async Task AddToGroupAsync(TKey hostId, TUser user, string groupName, bool global = false)
         {
             Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(user != null, "user");
@@ -298,7 +284,70 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 throw new Exception(string.Format("Group '{0}' not found for hostId '{1}' or in global groups.", groupName, hostId));
             }
 
-            await AddToGroupAsync(hostId, user, group);
+            await AddToGroupAsync(hostId, user, group, global);
+        }
+
+        /// <summary>
+        /// Add a user to a group for the current host. Group must belong to current host or be a global group.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        public virtual async Task AddToGroupAsync(TUser user, TKey groupId, bool global = false)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+
+            ThrowIfDisposed();
+
+            await AddToGroupAsync(this.HostId, user, groupId, global);
+        }
+
+        /// <summary>
+        /// Add a user to a group for the specified host. Group must belong to specified host or be a global group.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="groupId">The group identifier.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public virtual async Task AddToGroupAsync(TKey hostId, TUser user, TKey groupId, bool global = false)
+        {
+            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+
+            ThrowIfDisposed();
+
+            var group = await groups
+                .SingleOrDefaultAsync(g => g.Id.Equals(groupId) && (g.HostId.Equals(hostId) || g.IsGlobal == true))
+                .WithCurrentCulture();
+
+            if (group == null)
+            {
+                throw new Exception(string.Format("GroupId '{0}' not found for hostId '{1}' or in global groups.", groupId, hostId));
+            }
+
+            await AddToGroupAsync(hostId, user, group, global);
+        }
+
+        /// <summary>
+        /// Add a user to a group for the current host. Group must belong to current host or be a global group.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="group">The group.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        public virtual async Task AddToGroupAsync(TUser user, TGroup group, bool global = false)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(group != null, "group");
+
+            ThrowIfDisposed();
+
+            await AddToGroupAsync(this.HostId, user, group, global);
         }
 
         /// <summary>
@@ -307,9 +356,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="hostId">The host identifier.</param>
         /// <param name="user">The user.</param>
         /// <param name="group">The group.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public virtual async Task AddToGroupAsync(TKey hostId, TUser user, TGroup group)
+        public virtual async Task AddToGroupAsync(TKey hostId, TUser user, TGroup group, bool global = false)
         {
             Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(user != null, "user");
@@ -328,10 +378,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var userGroup = new TGroupUser
             {
-                HostId = (group.IsGlobal && group.IsGlobalOnly) ? this.SystemHostId : hostId,   // assign to system host if global only group
+                // assign to system host if global flag set and group is global -OR- it's a global only group
+                HostId = ((global && group.IsGlobal) || (group.IsGlobal && group.IsGlobalOnly)) ? this.SystemHostId : hostId,   // assign to system host if global only group
                 UserId = userId,
                 GroupId = groupId,
-                IsGlobal = group.IsGlobal && group.IsGlobalOnly  // if it's a global only group, set global flag
+                // assign to system host if global flag set and group is global -OR- it's a global only group
+                IsGlobal = ((global && group.IsGlobal) || (group.IsGlobal && group.IsGlobalOnly))
             };
 
             groupUsers.Add(userGroup);
@@ -345,11 +397,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 {
                     var userRole = new TUserRole
                     {
-                        HostId = (role.IsGlobal && role.IsGlobalOnly) ? this.SystemHostId : hostId,   // assign to system host if global only role
+                        // assign to system host if global flag set and role is global -OR- it's a global only role
+                        HostId = ((global && role.IsGlobal) || (role.IsGlobal && role.IsGlobalOnly)) ? this.SystemHostId : hostId,   // assign to system host if global only role
                         UserId = user.Id,
                         RoleId = role.Id,
                         GroupId = groupId, // this role was added as part of a group
-                        IsGlobal = role.IsGlobal && role.IsGlobalOnly  // if it's a global only role, set global flag
+                        // assign to system host if global flag set and role is global -OR- it's a global only role
+                        IsGlobal = ((global && role.IsGlobal) || (role.IsGlobal && role.IsGlobalOnly))
                     };
 
                     userRoles.Add(userRole);
@@ -376,14 +430,32 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
+        /// Add a user to a role for the current host. Role must belong to current host or be a global role.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="roleName">Name of the role.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        public virtual async Task AddToRoleAsync(TUser user, string roleName, bool global)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+
+            ThrowIfDisposed();
+
+            await AddToRoleAsync(user.HostId, user, roleName, global);
+        }
+
+        /// <summary>
         /// Add a user to a role for the specified host. Role must belong to specified host or be a global role.
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <param name="user">The user.</param>
         /// <param name="roleName">Name of the role.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public virtual async Task AddToRoleAsync(TKey hostId, TUser user, string roleName)
+        public virtual async Task AddToRoleAsync(TKey hostId, TUser user, string roleName, bool global = false)
         {
             Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(user != null, "user");
@@ -400,7 +472,53 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 throw new Exception(string.Format("Role '{0}' not found for hostId '{1}' or in global roles.", roleName, hostId));
             }
 
-            await AddToRoleAsync(hostId, user, role);
+            await AddToRoleAsync(hostId, user, role, global);
+        }
+
+        /// <summary>
+        /// Add a user to a role for the current host. Role must belong to current host or be a global role.
+        /// </summary>
+        /// <param name="user">The user.</param>
+        /// <param name="roleId">The role identifier.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        public virtual async Task AddToRoleAsync(TUser user, TKey roleId, bool global = false)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+
+            ThrowIfDisposed();
+
+            await AddToRoleAsync(user.HostId, user, roleId, global);
+        }
+
+        /// <summary>
+        /// Add a user to a role for the specified host. Role must belong to specified host or be a global role.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="roleId">The role identifier.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
+        /// <returns></returns>
+        /// <exception cref="System.Exception"></exception>
+        public virtual async Task AddToRoleAsync(TKey hostId, TUser user, TKey roleId, bool global = false)
+        {
+            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+
+            ThrowIfDisposed();
+
+            var role = await roles
+                .SingleOrDefaultAsync(r => r.Id.Equals(roleId) && (r.HostId.Equals(hostId) || r.IsGlobal == true))
+                .WithCurrentCulture();
+
+            if (role == null)
+            {
+                throw new Exception(string.Format("RoleId '{0}' not found for hostId '{1}' or in global roles.", roleId, hostId));
+            }
+
+            await AddToRoleAsync(hostId, user, role, global);
         }
 
         /// <summary>
@@ -409,9 +527,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="hostId">The host identifier.</param>
         /// <param name="user">The user.</param>
         /// <param name="role">The role.</param>
+        /// <param name="global">if set to <c>true</c> [global].</param>
         /// <returns></returns>
         /// <exception cref="System.Exception"></exception>
-        public virtual async Task AddToRoleAsync(TKey hostId, TUser user, TRole role)
+        public virtual async Task AddToRoleAsync(TKey hostId, TUser user, TRole role, bool global = false)
         {
             Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(user != null, "user");
@@ -429,11 +548,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var userRole = new TUserRole
             {
-                HostId = (role.IsGlobal && role.IsGlobalOnly) ? this.SystemHostId : hostId,   // assign to system host if global only role
+                // assign to system host if global flag set and role is global -OR- it's a global only role
+                HostId = ((global && role.IsGlobal) || (role.IsGlobal && role.IsGlobalOnly)) ? this.SystemHostId : hostId,
                 UserId = userId,
                 RoleId = roleId,
                 GroupId = null, // this role was not added as part of a group, so will not be affected by group operations
-                IsGlobal = role.IsGlobal && role.IsGlobalOnly  // if it's a global only role, set global flag
+                // set global flag if global flag set and role is global -OR- it's a global only role
+                IsGlobal = ((global && role.IsGlobal) || (role.IsGlobal && role.IsGlobalOnly))
             };
 
             userRoles.Add(userRole);
@@ -467,7 +588,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         // <summary>
-        ///     Mark an entity for deletion
+        ///     Delete a user. Also deletes all user groups, roles, claims, and logins for all domains!!!
         /// </summary>
         /// <param name="user"></param>
         public override Task DeleteAsync(TUser user)
@@ -477,10 +598,27 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             var userId = user.Id;
 
             var groups = groupUsers.Where(gu => gu.UserId.Equals(userId));
-
             foreach (var item in groups)
             {
                 groupUsers.Remove(item);
+            }
+
+            var roles = userRoles.Where(ur => ur.UserId.Equals(userId));
+            foreach (var item in roles)
+            {
+                userRoles.Remove(item);
+            }
+
+            var claims = userClaims.Where(uc => uc.UserId.Equals(userId));
+            foreach (var item in claims)
+            {
+                userClaims.Remove(item);
+            }
+
+            var logins = userLogins.Where(ul => ul.UserId.Equals(userId));
+            foreach (var item in logins)
+            {
+                userLogins.Remove(item);
             }
 
             return base.DeleteAsync(user);
@@ -898,7 +1036,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Returns true if the user is in the named role for the current host (or global)
+        /// Returns true if the user is in the named role for the specified host (or global)
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <param name="user">The user.</param>
@@ -914,6 +1052,21 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             var roleId = role.Id;
 
             return await userRoles.AnyAsync(ur => ur.UserId.Equals(userId) && ur.RoleId.Equals(roleId) && (ur.HostId.Equals(hostId) || ur.IsGlobal)).WithCurrentCulture();
+        }
+
+        /// <summary>
+        /// Returns true if the user is in the named role for the current host (or global)
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <param name="user">The user.</param>
+        /// <param name="role">The role.</param>
+        /// <returns></returns>
+        public virtual async Task<bool> IsInRoleAsync(TUser user, TRole role)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Contract.Requires<ArgumentNullException>(role != null, "role");
+
+            return await IsInRoleAsync(this.HostId, user, role);
         }
 
         /// <summary>

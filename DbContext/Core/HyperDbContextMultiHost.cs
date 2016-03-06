@@ -15,6 +15,7 @@ using System.Collections;
 using System.Reflection;
 using System.Data.Entity.Validation;
 using System.Data.Entity.Infrastructure.Annotations;
+using System.Net.Mail;
 
 namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 {
@@ -261,57 +262,163 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
         {
-            //TODO: validate the IsGlobal flags for entities that have it (i.e. must belong to system host)
             if (entityEntry != null && entityEntry.State == EntityState.Added)
             {
                 var errors = new List<DbValidationError>();
 
                 if (entityEntry.Entity is TUser)
                 {
-                    //check for uniqueness of user name and email
                     var user = entityEntry.Entity as TUser;
-                    if (user != null)
-                    {
-                        if (Users.Any(u => u.HostId.Equals(user.HostId) && u.UserName.ToUpper() == user.UserName.ToUpper()))
-                        {
-                            errors.Add(new DbValidationError("User", String.Format("UserName '{0}' already exists for Host", user.UserName)));
-                        }
-                        if (RequireUniqueEmail && Users.Any(u => u.HostId.Equals(user.HostId) && u.Email.ToUpper() == user.Email.ToUpper()))
-                        {
-                            errors.Add(new DbValidationError("User", String.Format("Duplicate email '{0}' for Host", user.Email)));
-                        }
-                    }
 
-                    if (!errors.Any())
-                    {
-                        return null;
-                    }
+                    errors.AddRange(ValidateUser(user));
+
+                    return new DbEntityValidationResult(entityEntry, errors);
                 }
                 else if (entityEntry.Entity is TRole)
                 {
                     var role = entityEntry.Entity as TRole;
-                    //check for uniqueness of role name
-                    if (role != null)
-                    {
-                        if (Roles.Any(r => r.HostId.Equals(role.HostId) && r.Name.ToUpper() == role.Name.ToUpper()))
-                        {
-                            errors.Add(new DbValidationError("Role", String.Format("Role '{0} already exists for Host", role.Name)));
-                        }
-                    }
 
-                    if (!errors.Any())
-                    {
-                        return null;
-                    }
-                }
+                    errors.AddRange(ValidateRole(role));
 
-                if (errors.Any())
-                {
                     return new DbEntityValidationResult(entityEntry, errors);
                 }
             }
 
             return base.ValidateEntity(entityEntry, items);
+        }
+
+        private List<DbValidationError> ValidateUser(TUser user)
+        {
+            Contract.Requires<ArgumentNullException>(user != null, "user");
+
+            var errors = new List<DbValidationError>();
+
+            // UserName is required
+            if (user.UserName.IsNullOrWhiteSpace())
+            {
+                errors.Add(new DbValidationError("User", "UserName required."));
+            }
+
+            // email is required
+            if (user.Email.IsNullOrWhiteSpace())
+            {
+                errors.Add(new DbValidationError("User", "Email address is required."));
+            }
+
+            // email must be valid
+            try
+            {
+                var m = new MailAddress(user.Email);
+            }
+            catch (FormatException)
+            {
+                errors.Add(new DbValidationError("User", "Email address is invalid."));
+            }
+
+            // check ig global user tied to system host
+            if (user.IsGlobal)
+            {
+                if (!user.HostId.Equals(this.SystemHostId))
+                {
+                    errors.Add(new DbValidationError("User", "Global users must belong to system host."));
+                }
+            }
+
+            // check user name for uniqueness
+            if (user.IsGlobal)
+            {
+                // global user cannot exist in any hosts
+                var userId = user.Id;
+                var userName = user.UserName;
+                List<TUser> existingUsers = this.Users.Where(u => u.UserName == userName).ToList();
+
+                if (existingUsers.Any(u => !u.Id.Equals(userId)))
+                {
+                    errors.Add(new DbValidationError("User", String.Format("UserName '{0}' already exists in system.", user.UserName)));
+                }
+            }
+            else
+            {
+                // user cannot exist in host
+                var userId = user.Id;
+                var userName = user.UserName;
+                var hostId = user.HostId;
+                List<TUser> existingHostUsers = this.Users.Where(u => u.UserName == userName && u.HostId.Equals(hostId)).ToList();
+
+                if (existingHostUsers.Any(u => !u.Id.Equals(userId)))
+                {
+                    errors.Add(new DbValidationError("User", String.Format("User '{0}' already exists for host.", user.UserName)));
+                }
+
+                // user cannot exist as global
+                List<TUser> existingGlobalUsers = this.Users.Where(u => u.UserName == userName && u.IsGlobal == true).ToList();
+
+                if (existingGlobalUsers.Any(u => !u.Id.Equals(userId)))
+                {
+                    errors.Add(new DbValidationError("User", String.Format("User '{0}' already exists as global user.", user.UserName)));
+                }
+            }
+
+            return errors;
+        }
+
+        private List<DbValidationError> ValidateRole(TRole role)
+        {
+            Contract.Requires<ArgumentNullException>(role != null, "role");
+
+            var errors = new List<DbValidationError>();
+
+            // role name is required
+            if (string.IsNullOrWhiteSpace(role.Name))
+            {
+                errors.Add(new DbValidationError("Role", String.Format("Role name is required.")));
+            }
+
+            // check if global role tied to system host
+            if (role.IsGlobal)
+            {
+                if (!role.HostId.Equals(this.SystemHostId))
+                {
+                    errors.Add(new DbValidationError("Role", "Global roles must belong to system host."));
+                }
+            }
+
+            if (role.IsGlobal)
+            {
+                // check if the role already exists
+                // either as a system role or on any host
+                var roleId = role.Id;
+                var roleName = role.Name;
+                List<TRole> existingRoles = this.Roles.Where(r => r.Name == roleName).ToList();
+
+                if (existingRoles.Any(r => !r.Id.Equals(roleId)))
+                {
+                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists.", role.Name)));
+                }
+            }
+            else
+            {
+                // role cannot exist in host
+                var roleId = role.Id;
+                var roleName = role.Name;
+                var hostId = role.HostId;
+                List<TRole> existingHostRoles = this.Roles.Where(r => r.Name == roleName && r.HostId.Equals(hostId)).ToList();
+
+                if (existingHostRoles.Any(r => !r.Id.Equals(roleId)))
+                {
+                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists for host.", roleName)));
+                }
+
+                // role cannot exist as global
+                List<TRole> existingGlobalRoles = this.Roles.Where(r => r.Name == roleName && r.IsGlobal == true).ToList();
+
+                if (existingGlobalRoles.Any(r => !r.Id.Equals(roleId)))
+                {
+                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists as global role.", roleName)));
+                }
+            }
+
+            return errors;
         }
     }
 }

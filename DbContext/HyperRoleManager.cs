@@ -117,6 +117,44 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
+        /// Gets the roles for the specified host.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <returns></returns>
+        public IQueryable<TRole> GetRoles(TKey hostId)
+        {
+            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
+
+            ThrowIfDisposed();
+
+            return HyperRoleStore.GetRoles(hostId);
+        }
+
+        /// <summary>
+        /// Gets the roles for the specified host.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <returns></returns>
+        public IQueryable<TRole> GetRoles()
+        {
+            ThrowIfDisposed();
+
+            return HyperRoleStore.GetRoles(this.HostId);
+        }
+
+        /// <summary>
+        /// Gets the roles for the specified host.
+        /// </summary>
+        /// <param name="hostId">The host identifier.</param>
+        /// <returns></returns>
+        public IQueryable<TRole> GetAllRoles()
+        {
+            ThrowIfDisposed();
+
+            return HyperRoleStore.GetAllRoles();
+        }
+
+        /// <summary>
         /// Creates a role for the current host (or global host if global flag set)
         /// </summary>
         /// <param name="roleName">Name of the role.</param>
@@ -228,32 +266,6 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Gets the roles for the specified host.
-        /// </summary>
-        /// <param name="hostId">The host identifier.</param>
-        /// <returns></returns>
-        public IQueryable<TRole> GetRoles(TKey hostId)
-        {
-            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
-
-            ThrowIfDisposed();
-
-            return HyperRoleStore.GetRoles(hostId);
-        }
-
-        /// <summary>
-        /// Gets the roles for the specified host.
-        /// </summary>
-        /// <param name="hostId">The host identifier.</param>
-        /// <returns></returns>
-        public IQueryable<TRole> GetAllRoles()
-        {
-            ThrowIfDisposed();
-
-            return HyperRoleStore.GetAllRoles();
-        }
-
-        /// <summary>
         /// Checks if a role exists for the default host or in global roles.
         /// </summary>
         /// <param name="roleName">Name of the role.</param>
@@ -317,6 +329,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
 
             await HyperRoleStore.UpdateAsync(role).WithCurrentCulture();
+
+            return IdentityResult.Success;
+        }
+
+        /// <summary>
+        /// Deletes an existing role.
+        /// </summary>
+        /// <param name="role">The role.</param>
+        /// <returns></returns>
+        /// <exception cref="System.ArgumentException">Roles cannot be assigned a new hostId.</exception>
+        /// <exception cref="System.ArgumentException">Roles cannot be assigned a new hostId.</exception>
+        public override async Task<IdentityResult> DeleteAsync(TRole role)
+        {
+            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+
+            ThrowIfDisposed();
+
+            await HyperRoleStore.DeleteAsync(role).WithCurrentCulture();
 
             return IdentityResult.Success;
         }

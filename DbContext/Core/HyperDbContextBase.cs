@@ -362,7 +362,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             if (!userName.IsNullOrWhiteSpace() && userName != SystemUserName)
             {
-                var user = this.Set<TUser>().SingleOrDefault(u => u.UserName.ToUpper() == userName.ToUpper());
+                var hostId = this.HostId;
+
+                var user = this.Set<TUser>().SingleOrDefault(u => u.UserName.ToUpper() == userName.ToUpper() && (u.HostId.Equals(hostId) || u.IsGlobal == true));
                 if (user != null)
                 {
                     return user.Id;

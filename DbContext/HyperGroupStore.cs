@@ -300,7 +300,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The group identifier.</param>
         /// <returns></returns>
-        public IList<TRole> GetRoles(TGroup group)
+        public async Task<IList<TRole>> GetRolesAsync(TGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -311,7 +311,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var roleIds = groupRoles.Where(gr => gr.GroupId.Equals(groupId)).Select(gr => gr.RoleId).ToArray();
 
-            return roles.Where(r => roleIds.Contains(r.Id)).ToList();
+            return await roles.Where(r => roleIds.Contains(r.Id)).ToListAsync();
         }
 
         /// <summary>
@@ -319,7 +319,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The group identifier.</param>
         /// <returns></returns>
-        public IList<TUser> GetUsers(TGroup group)
+        public async Task<IList<TUser>> GetUsersAsync(TGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -330,7 +330,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var userIds = groupUsers.Where(gu => gu.GroupId.Equals(groupId)).Select(gu => gu.UserId).ToArray();
 
-            return users.Where(u => userIds.Contains(u.Id)).ToList();
+            return await users.Where(u => userIds.Contains(u.Id)).ToListAsync();
         }
 
         /// <summary>

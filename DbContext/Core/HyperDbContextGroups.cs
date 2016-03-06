@@ -122,5 +122,85 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             modelBuilder.Entity<TGroupUser>()
                 .ToTable((RoleGroupsGroupUsersTableName.IsNullOrWhiteSpace() ? "AspNetGroupUsers" : RoleGroupsGroupUsersTableName), (RoleGroupsSchemaName.IsNullOrWhiteSpace() ? "dbo" : RoleGroupsSchemaName));
         }
+
+        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry, IDictionary<object, object> items)
+        {
+            if (entityEntry != null && entityEntry.State == EntityState.Added)
+            {
+                var errors = new List<DbValidationError>();
+
+                if (entityEntry.Entity is TGroup)
+                {
+                    var group = entityEntry.Entity as TGroup;
+                    errors.AddRange(ValidateRoleGroup(group));
+                }
+
+                if (errors.Any())
+                {
+                    return new DbEntityValidationResult(entityEntry, errors);
+                }
+            }
+
+            return base.ValidateEntity(entityEntry, items);
+        }
+
+        private List<DbValidationError> ValidateRoleGroup(TGroup group)
+        {
+            Contract.Requires<ArgumentNullException>(group != null, "group");
+
+            var errors = new List<DbValidationError>();
+
+            // group name is required
+            if (string.IsNullOrWhiteSpace(group.Name))
+            {
+                errors.Add(new DbValidationError("RoleGroup", String.Format("Group name is required.")));
+            }
+
+            // check if global group tied to system host
+            if (group.IsGlobal)
+            {
+                if (!group.HostId.Equals(this.SystemHostId))
+                {
+                    errors.Add(new DbValidationError("RoleGroup", "Global groups must belong to system host."));
+                }
+            }
+
+            if (group.IsGlobal)
+            {
+                // check if the role already exists
+                // either as a system role or on any host
+                var groupId = group.Id;
+                var groupName = group.Name;
+                List<TGroup> existingGroups = this.RoleGroups.Where(g => g.Name == groupName).ToList();
+
+                if (existingGroups.Any(g => !g.Id.Equals(groupId)))
+                {
+                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists.", group.Name)));
+                }
+            }
+            else
+            {
+                // group cannot exist in host
+                var groupId = group.Id;
+                var groupName = group.Name;
+                var hostId = group.HostId;
+                List<TGroup> existingHostGroups = this.RoleGroups.Where(g => g.Name == groupName && g.HostId.Equals(hostId)).ToList();
+
+                if (existingHostGroups.Any(g => !g.Id.Equals(groupId)))
+                {
+                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists for host.", groupName)));
+                }
+
+                // group cannot exist as global
+                List<TGroup> existingGlobalGroups = this.RoleGroups.Where(g => g.Name == groupName && g.IsGlobal == true).ToList();
+
+                if (existingGlobalGroups.Any(g => !g.Id.Equals(groupId)))
+                {
+                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists as global group.", groupName)));
+                }
+            }
+
+            return errors;
+        }
     }
 }
