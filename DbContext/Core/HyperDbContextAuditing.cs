@@ -319,13 +319,18 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             //var addedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
             foreach (var item in addedEntities)
             {
-                IAuditableUserAndDate<TKey> entity = item.Entity as IAuditableUserAndDate<TKey>;
-                if (entity != null)
+                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                if (dateEntity != null)
                 {
-                    entity.CreatedDate = this.auditDate;
-                    entity.CreatedBy = this.UserId;
-                    entity.LastChangedDate = this.auditDate;
-                    entity.LastChangedBy = this.UserId;
+                    dateEntity.CreatedDate = this.auditDate;
+                    dateEntity.LastChangedDate = this.auditDate;
+
+                    IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                    if (userEntity != null)
+                    {
+                        userEntity.CreatedBy = this.UserId;
+                        userEntity.LastChangedBy = this.UserId;
+                    }
                 }
             }
 
@@ -334,11 +339,16 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             //var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
             foreach (var item in changedEntities)
             {
-                IAuditableUserAndDate<TKey> entity = item.Entity as IAuditableUserAndDate<TKey>;
-                if (entity != null)
+                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                if (dateEntity != null)
                 {
-                    entity.LastChangedDate = this.auditDate;
-                    entity.LastChangedBy = this.UserId;
+                    dateEntity.LastChangedDate = this.auditDate;
+
+                    IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                    if (userEntity != null)
+                    {
+                        userEntity.LastChangedBy = this.UserId;
+                    }
                 }
             }
         }

@@ -278,6 +278,7 @@
     <Compile Include="HyperUserStore.cs" />
     <Compile Include="HyperUserValidator.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
+    <Compile Include="Interfaces\IAuditableDate.cs" />
     <Compile Include="Interfaces\IAuditableUserAndDate.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IHyperRole.cs" />

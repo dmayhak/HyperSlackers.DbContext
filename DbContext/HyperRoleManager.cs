@@ -123,7 +123,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public IQueryable<TRole> GetRoles(TKey hostId)
         {
-            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
 
             ThrowIfDisposed();
 
@@ -187,7 +187,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(TKey hostId, string roleName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
@@ -257,7 +257,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRole> FindByNameAsync(TKey hostId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();

@@ -81,7 +81,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperGroupManager<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty>
+    public class HyperGroupManager<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : IDisposable
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
         where TKey : struct, IEquatable<TKey>
@@ -199,7 +199,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global groups must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(TKey hostId, string groupName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(hostId.Equals(default(TKey)), "hostId");
+            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();

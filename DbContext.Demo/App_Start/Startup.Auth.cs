@@ -21,6 +21,8 @@ namespace HyperSlackers.DbContext.Demo
             app.CreatePerOwinContext<ApplicationHostManager>(ApplicationHostManager.Create);
             // DRM Added
             app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+            // DRM Added
+            app.CreatePerOwinContext<ApplicationGroupManager>(ApplicationGroupManager.Create);
             app.CreatePerOwinContext<ApplicationSignInManager>(ApplicationSignInManager.Create);
 
             // Enable the application to use a cookie to store information for the signed in user
