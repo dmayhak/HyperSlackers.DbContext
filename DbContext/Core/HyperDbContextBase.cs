@@ -235,6 +235,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             this.HostId = GetHostId(this.HostName);
             this.UserName = GetUserName();
             this.UserId = GetUserId(this.UserName);
+
+            if (userId.Equals(default(TKey)) || systemHostId.Equals(default(TKey)))
+            {
+                // if we don't have valid data yet, let it initialize again
+                initialized = false;
+            }
         }
 
         /// <summary>
