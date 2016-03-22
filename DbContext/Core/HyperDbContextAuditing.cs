@@ -13,6 +13,7 @@ using System.Data.Entity.Infrastructure;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections;
 using System.Reflection;
+using System.Threading;
 
 namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 {
@@ -154,6 +155,32 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
             // save changes
             int rowCount = base.SaveChanges(); // save the change count so our audit stuff does not affect the return value...
+
+            // put audit records into DbContext and save them
+            AppendAuditRecordsToContext(); //! this calls base.SaveChanges()! (if audit records exist)
+
+            return rowCount;
+        }
+
+        public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            // set this on each call so that multiple call to save changes each get a new time
+            this.auditDate = DateTime.Now;
+
+            ChangeTracker.DetectChanges(); //! important to call this prior to auditing, etc.
+
+            UpdateAuditUserAndDateFields(); // last changed date/by, created date/by, etc...
+
+            // short-circuit if disabled
+            if (!AuditingEnabled)
+            {
+                return await base.SaveChangesAsync(cancellationToken);
+            }
+
+            CreateAuditRecords(); // create audit data and hold it until after we save user's changes
+
+            // save changes
+            int rowCount = await base.SaveChangesAsync(cancellationToken); // save the change count so our audit stuff does not affect the return value...
 
             // put audit records into DbContext and save them
             AppendAuditRecordsToContext(); //! this calls base.SaveChanges()! (if audit records exist)
@@ -319,7 +346,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             //var addedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
             foreach (var item in addedEntities)
             {
-                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableDate<TKey>;
                 if (dateEntity != null)
                 {
                     dateEntity.CreatedDate = this.auditDate;
@@ -339,7 +366,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             //var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
             foreach (var item in changedEntities)
             {
-                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableDate<TKey>;
                 if (dateEntity != null)
                 {
                     dateEntity.LastChangedDate = this.auditDate;

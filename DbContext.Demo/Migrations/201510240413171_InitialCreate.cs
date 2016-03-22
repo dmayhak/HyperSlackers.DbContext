@@ -233,6 +233,10 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                 c => new
                     {
                         Id = c.Guid(nullable: false),
+                        CreatedBy = c.Guid(nullable: false),
+                        CreatedDate = c.DateTime(nullable: false),
+                        LastChangedBy = c.Guid(nullable: false),
+                        LastChangedDate = c.DateTime(nullable: false),
                         FavoriteColor = c.String(),
                         ClusteredKey = c.Long(nullable: false, identity: true),
                         HostId = c.Guid(nullable: false),

@@ -13,8 +13,13 @@ namespace HyperSlackers.DbContext.Demo.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit http://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     // DRM Changed
     //x public class ApplicationUser : IdentityUser
-    public class ApplicationUser : HyperUserGuid
+    public class ApplicationUser : HyperUserGuid, IAuditableUserAndDate<Guid>
     {
+        public Guid CreatedBy { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public Guid LastChangedBy { get; set; }
+        public DateTime LastChangedDate { get; set; }
+
         // DRM Added
         public string FavoriteColor { get; set; } // just something to see in DB generation
 
