@@ -110,7 +110,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperContext.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperContext.SystemHostId; } }
-        public TKey HostId { get { return HyperContext.HostId; } }
+        public TKey CurrentHostId { get { return HyperContext.CurrentHostId; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperHostStore{THost, TKey}"/> class.

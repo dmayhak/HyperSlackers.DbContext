@@ -77,6 +77,11 @@ namespace HyperSlackers.DbContext.Demo.Controllers
                 //x BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId.ToString())
             };
+
+            var context = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+            model.UserId = context.CurrentUserId;
+            model.UserName = context.CurrentUserName;
+
             return View(model);
         }
 

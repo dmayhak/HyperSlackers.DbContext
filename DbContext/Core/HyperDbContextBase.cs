@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -44,13 +45,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
     {
-        private string systemHostName;
-        private TKey systemHostId;
-        private string hostName;
-        private TKey hostId;
-        private string userName;
-        private TKey userId;
-        private bool initialized = false;
+        private THost systemHost = null;
+        private THost currentHost = null;
+        private TUser currentUser = null;
 
         /// <summary>
         /// Gets or sets a value indicating whether multi-host functionality is enabled or not.
@@ -61,7 +58,95 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         [EditorBrowsable(EditorBrowsableState.Never)]
         protected internal bool MultiHostEnabled { get; set; }
 
-        public const string SystemUserName = "<system>";
+        private const string defaultName = "<system>";
+
+        /// <summary>
+        /// Gets the system host.
+        /// </summary>
+        /// <value>
+        /// The system host.
+        /// </value>
+        public THost SystemHost
+        {
+            get
+            {
+                if (systemHost == null)
+                {
+                    systemHost = this.Set<THost>().Where(h => h.IsSystemHost == true).SingleOrDefault();
+                }
+
+                return systemHost;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current host.
+        /// </summary>
+        /// <value>
+        /// The current host.
+        /// </value>
+        public THost CurrentHost
+        {
+            get
+            {
+                if (currentHost == null)
+                {
+                    try
+                    {
+                        System.Web.HttpContext context = System.Web.HttpContext.Current;
+                        if (context != null)
+                        {
+                            // web application
+                            var hostName = context.Request.Url.Host;
+                            currentHost = this.Set<THostDomain>().SingleOrDefault(d => d.DomainName.ToUpper() == hostName.ToUpper()).Host;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //TODO: hopefully we only hit this when creating the migration and db does not exist
+                        System.Diagnostics.Debug.WriteLine("CurrentHost.Get Failed: " + ex.Message);
+                    }
+                }
+
+                return currentHost;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current user.
+        /// </summary>
+        /// <value>
+        /// The current user.
+        /// </value>
+        public TUser CurrentUser
+        {
+            get
+            {
+                if (currentUser == null)
+                {
+                    try
+                    {
+                        System.Web.HttpContext context = System.Web.HttpContext.Current;
+                        if (context != null)
+                        {
+                            var contextUser = context.User;
+                            if (contextUser != null)
+                            {
+                                var userId = contextUser.Identity.GetUserId();
+                                currentUser = this.Set<TUser>().SingleOrDefault(u => u.Id.ToString().ToUpper() == userId.ToUpper());
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //TODO: hopefully we only hit this when creating the migration and db does not exist
+                        System.Diagnostics.Debug.WriteLine("CurrentUser.Get Failed: " + ex.Message);
+                    }
+                }
+
+                return currentUser;
+            }
+        }
 
         /// <summary>
         /// Gets the name of the system host.
@@ -73,120 +158,106 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             get
             {
-                Initialize();
+                if (SystemHost != null)
+                {
+                    return systemHost.Name;
+                }
 
-                return systemHostName;
-            }
-            private set
-            {
-                Initialize();
-
-                systemHostName = value;
+                return defaultName;
             }
         }
         /// <summary>
-        /// Gets the system host identifier.
+        /// Gets the system host id.
         /// </summary>
         /// <value>
-        /// The system host identifier.
+        /// The system host id.
         /// </value>
         public TKey SystemHostId
         {
             get
             {
-                Initialize();
+                if (SystemHost != null)
+                {
+                    return systemHost.Id;
+                }
 
-                return systemHostId;
-            }
-            private set
-            {
-                Initialize();
-
-                systemHostId = value;
+                return default(TKey);
             }
         }
+
         /// <summary>
         /// Gets the name of the current host.
         /// </summary>
         /// <value>
         /// The name of the host.
         /// </value>
-        public string HostName
+        public string CurrentHostName
         {
             get
             {
-                Initialize();
+                if (CurrentHost != null)
+                {
+                    return currentHost.Name;
+                }
 
-                return hostName;
-            }
-            private set
-            {
-                Initialize();
-
-                hostName = value;
+                return defaultName;
             }
         }
+
         /// <summary>
         /// Gets the current host's identifier.
         /// </summary>
         /// <value>
         /// The host identifier.
         /// </value>
-        public TKey HostId
+        public TKey CurrentHostId
         {
             get
             {
-                Initialize();
+                if (CurrentHost != null)
+                {
+                    return currentHost.Id;
+                }
 
-                return hostId;
-            }
-            private set
-            {
-                Initialize();
-
-                hostId = value;
+                return default(TKey);
             }
         }
+
         /// <summary>
         /// Gets the name of the current user.
         /// </summary>
         /// <value>
         /// The name of the user.
         /// </value>
-        public string UserName
+        public string CurrentUserName
         {
             get
             {
-                Initialize();
+                if (CurrentUser != null)
+                {
+                    return currentUser.UserName;
+                }
 
-                return userName;
-            }
-            private set
-            {
-                Initialize();
-
-                userName = value;
+                return defaultName;
             }
         }
+
         /// <summary>
         /// Gets the current user's identifier.
         /// </summary>
         /// <value>
         /// The user identifier.
         /// </value>
-        public TKey UserId
+        public TKey CurrentUserId
         {
             get
             {
-                Initialize();
+                if (CurrentUser != null)
+                {
+                    return currentUser.Id;
+                }
 
-                return userId;
-            }
-            private set
-            {
-                Initialize();
-
-                userId = value;
+                return default(TKey);
             }
         }
 
@@ -207,177 +278,6 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             : base(nameOrConnectionString)
         {
             Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
-
-            this.systemHostName = string.Empty;
-            this.systemHostId = default(TKey);
-            this.hostName = string.Empty;
-            this.hostId = default(TKey);
-            this.userName = string.Empty;
-            this.userId = default(TKey);
-        }
-
-        /// <summary>
-        /// Initializes the system, host, and user names and ids.
-        /// </summary>
-        /// <param name="forceInit">if set to <c>true</c> forces a re-initialization of the variables.</param>
-        protected void Initialize(bool forceInit = false)
-        {
-            if (initialized && !forceInit)
-            {
-                return;
-            }
-
-            initialized = true; // up top to avoid recursion on first call
-
-            this.SystemHostName = GetSystemHostName();
-            this.SystemHostId = GetSystemHostId();
-            this.HostName = GetHostName();
-            this.HostId = GetHostId(this.HostName);
-            this.UserName = GetUserName();
-            this.UserId = GetUserId(this.UserName);
-
-            if (userId.Equals(default(TKey)) || systemHostId.Equals(default(TKey)))
-            {
-                // if we don't have valid data yet, let it initialize again
-                initialized = false;
-            }
-        }
-
-        /// <summary>
-        /// Gets the name of the system host.
-        /// </summary>
-        /// <returns>The name of the system host, or "<system>" if no system host found.</system></returns>
-        private string GetSystemHostName()
-        {
-            var host = this.Set<THost>().SingleOrDefault(h => h.IsSystemHost);
-            if (host != null)
-            {
-                return host.Name;
-            }
-
-            return "<system>";
-        }
-
-        /// <summary>
-        /// Gets the host id for the system host.
-        /// </summary>
-        /// <returns>The id of the system host, or <code>default(TKey)</code> if no system host found.</returns>
-        private TKey GetSystemHostId()
-        {
-            var host = this.Set<THost>().SingleOrDefault(h => h.IsSystemHost);
-            if (host != null)
-            {
-                return host.Id;
-            }
-
-            return default(TKey);
-        }
-
-        /// <summary>
-        /// Gets the name of the current host.
-        /// </summary>
-        /// <returns></returns>
-        private string GetHostName()
-        {
-            try
-            {
-                System.Web.HttpContext context = System.Web.HttpContext.Current;
-                if (context != null)
-                {
-                    // web application
-                    return context.Request.Url.Host;
-                }
-                else
-                {
-                    // windows application
-                    var host = System.Environment.MachineName;
-
-                    return host;
-                }
-            }
-            catch (Exception ex)
-            {
-                //TODO: hopefully we only hit this when creating the migration and db does not exist
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-
-            return SystemHostName;
-        }
-
-        /// <summary>
-        /// Gets the host id for the specified host name.
-        /// </summary>
-        /// <param name="hostName">Name of the host.</param>
-        /// <returns></returns>
-        private TKey GetHostId(string hostName)
-        {
-            if (!MultiHostEnabled || hostName == SystemHostName)
-            {
-                return SystemHostId;
-            }
-
-            if (!hostName.IsNullOrWhiteSpace())
-            {
-                var host = this.Set<THost>().SingleOrDefault(h => h.Name.ToUpper() == hostName.ToUpper());
-                if (host != null)
-                {
-                    return host.Id;
-                }
-            }
-
-            return SystemHostId;
-        }
-
-        /// <summary>
-        /// Gets the name of the current user.
-        /// </summary>
-        /// <returns></returns>
-        private string GetUserName()
-        {
-            try
-            {
-                System.Web.HttpContext context = System.Web.HttpContext.Current;
-                if (context != null)
-                {
-                    // web application
-                    return context.User.Identity.Name;
-                }
-                else
-                {
-                    // windows application
-                    var user = System.Security.Principal.WindowsIdentity.GetCurrent();
-
-                    return user.Name;
-                }
-            }
-            catch (Exception ex)
-            {
-                //TODO: hopefully we only hit this when creating the migration and db does not exist
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-            }
-
-            return SystemUserName;
-        }
-
-        /// <summary>
-        /// Gets the user id for the specified user name.
-        /// </summary>
-        /// <param name="userName">The user name.</param>
-        /// <returns></returns>
-        private TKey GetUserId(string userName)
-        {
-            if (!userName.IsNullOrWhiteSpace() && userName != SystemUserName)
-            {
-                var hostId = this.HostId;
-
-                var user = this.Set<TUser>().SingleOrDefault(u => u.UserName.ToUpper() == userName.ToUpper() && (u.HostId.Equals(hostId) || u.IsGlobal == true));
-                if (user != null)
-                {
-                    return user.Id;
-                }
-            }
-
-            return default(TKey);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

@@ -101,7 +101,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperContext.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperContext.SystemHostId; } }
-        public TKey HostId { get { return HyperContext.HostId; } }
+        public TKey CurrentHostId { get { return HyperContext.CurrentHostId; } }
 
         public bool AutoSaveChanges { get; set; }
         private readonly IDbSet<TGroup> groups;
@@ -162,7 +162,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             ThrowIfDisabled();
             ThrowIfDisposed();
 
-            return GetGroups(this.HostId);
+            return GetGroups(this.CurrentHostId);
         }
 
         /// <summary>
@@ -193,7 +193,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (group.HostId.Equals(default(TKey)))
             {
-                group.HostId = this.HostId;
+                group.HostId = this.CurrentHostId;
             }
 
             if (group.IsGlobal && !group.HostId.Equals(this.SystemHostId))
@@ -275,7 +275,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             ThrowIfDisabled();
             ThrowIfDisposed();
 
-            return await FindByNameAsync(this.HostId, groupName);
+            return await FindByNameAsync(this.CurrentHostId, groupName);
         }
 
         /// <summary>

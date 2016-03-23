@@ -99,7 +99,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperContext.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperContext.SystemHostId; } }
-        public TKey HostId { get { return HyperContext.HostId; } }
+        public TKey CurrentHostId { get { return HyperContext.CurrentHostId; } }
 
         protected internal readonly HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> HyperContext;
 
@@ -123,7 +123,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             ThrowIfDisposed();
 
-            return GetRoles(this.HostId);
+            return GetRoles(this.CurrentHostId);
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (role.HostId.Equals(default(TKey)))
             {
-                role.HostId = this.HostId;
+                role.HostId = this.CurrentHostId;
             }
 
             if (role.IsGlobal && !role.HostId.Equals(this.SystemHostId))
@@ -187,7 +187,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindByNameAsync(this.HostId, roleName);
+            return await FindByNameAsync(this.CurrentHostId, roleName);
         }
 
         /// <summary>

@@ -99,7 +99,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperRoleStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperRoleStore.SystemHostId; } }
-        public TKey HostId { get { return HyperRoleStore.HostId; } }
+        public TKey HostId { get { return HyperRoleStore.CurrentHostId; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperRoleManager{TKey, TRole}" /> class.

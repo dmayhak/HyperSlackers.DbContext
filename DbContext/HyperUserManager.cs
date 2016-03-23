@@ -108,7 +108,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperUserStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperUserStore.SystemHostId; } }
-        public TKey HostId { get { return HyperUserStore.HostId; } }
+        public TKey HostId { get { return HyperUserStore.CurrentHostId; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperUserManager{TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty}"/> class.

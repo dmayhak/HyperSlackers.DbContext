@@ -102,7 +102,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperGroupStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperGroupStore.SystemHostId; } }
-        public TKey HostId { get { return HyperGroupStore.HostId; } }
+        public TKey HostId { get { return HyperGroupStore.CurrentHostId; } }
         public bool GroupsEnabled { get { return HyperGroupStore.GroupsEnabled; } }
 
         /// <summary>

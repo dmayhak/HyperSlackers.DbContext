@@ -355,8 +355,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                     IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
                     if (userEntity != null)
                     {
-                        userEntity.CreatedBy = this.UserId;
-                        userEntity.LastChangedBy = this.UserId;
+                        userEntity.CreatedBy = this.CurrentUserId;
+                        userEntity.LastChangedBy = this.CurrentUserId;
                     }
                 }
             }
@@ -374,7 +374,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                     IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
                     if (userEntity != null)
                     {
-                        userEntity.LastChangedBy = this.UserId;
+                        userEntity.LastChangedBy = this.CurrentUserId;
                     }
                 }
             }
@@ -385,7 +385,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// </summary>
         private void CreateAuditRecords()
         {
-            this.currentAudit = new TAudit() { AuditDate = this.auditDate, HostId = this.HostId, HostName = this.HostName, UserId = this.UserId, UserName = this.UserName };
+            this.currentAudit = new TAudit() { AuditDate = this.auditDate, HostId = this.CurrentHostId, HostName = this.CurrentHostName, UserId = this.CurrentUserId, UserName = this.CurrentUserName };
             this.currentAuditProperties = new List<TAuditProperty>();
             this.currentAuditItems = new List<TAuditItem>();
 
