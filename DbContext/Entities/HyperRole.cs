@@ -78,6 +78,15 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </value>
         public bool IsGlobalOnly { get; set; }
 
+
+        /// <summary>
+        /// Sequence field used to order display lists, etc.
+        /// </summary>
+        /// <value>
+        /// The sequence.
+        /// </value>
+        public int Sequence { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperRole{TKey}"/> class.
         /// </summary>

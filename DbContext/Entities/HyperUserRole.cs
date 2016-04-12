@@ -57,7 +57,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <value>
         /// The group identifier.
         /// </value>
-        public TKey? GroupId { get; set; }
+        public TKey? RoleGroupId { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the role is assigned at the global level.

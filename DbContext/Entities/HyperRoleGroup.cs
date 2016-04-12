@@ -12,9 +12,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Represents a set of Roles and the users assigned to them.
     /// </summary>
-    public class HyperGroupGuid : HyperGroup<Guid, HyperGroupRoleGuid, HyperGroupUserGuid>
+    public class HyperRoleGroupGuid : HyperRoleGroup<Guid, HyperRoleGroupRoleGuid, HyperRoleGroupUserGuid>
     {
-        public HyperGroupGuid()
+        public HyperRoleGroupGuid()
         {
             this.Id = Guid.NewGuid();
         }
@@ -23,7 +23,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Represents a set of Roles and the users assigned to them.
     /// </summary>
-    public class HyperGroupInt : HyperGroup<int, HyperGroupRoleInt, HyperGroupUserInt>
+    public class HyperRoleGroupInt : HyperRoleGroup<int, HyperRoleGroupRoleInt, HyperRoleGroupUserInt>
     {
 
     }
@@ -31,7 +31,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Represents a set of Roles and the users assigned to them.
     /// </summary>
-    public class HyperGroupLong : HyperGroup<long, HyperGroupRoleLong, HyperGroupUserLong>
+    public class HyperRoleGroupLong : HyperRoleGroup<long, HyperRoleGroupRoleLong, HyperRoleGroupUserLong>
     {
 
     }
@@ -40,12 +40,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Represents a set of Roles and the users assigned to them.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
-    /// <typeparam name="TGroupRole">The type of the group role.</typeparam>
-    /// <typeparam name="TGroupUser">The type of the group user.</typeparam>
-    public class HyperGroup<TKey, TGroupRole, TGroupUser> : IAuditable<TKey>
+    /// <typeparam name="TRoleGroupRole">The type of the group role.</typeparam>
+    /// <typeparam name="TRoleGroupUser">The type of the group user.</typeparam>
+    public class HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser> : IAuditable<TKey>
         where TKey : struct, IEquatable<TKey>
-        where TGroupRole : HyperGroupRole<TKey>
-        where TGroupUser : HyperGroupUser<TKey>
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>
     {
         [Key]
         public TKey Id { get; set; }
@@ -72,24 +72,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public bool IsGlobalOnly { get; set; }
 
         [CascadeDelete]
-        public virtual ICollection<TGroupRole> Roles { get; set; }
+        public virtual ICollection<TRoleGroupRole> Roles { get; set; }
 
         [CascadeDelete]
-        public virtual ICollection<TGroupUser> Users { get; set; }
+        public virtual ICollection<TRoleGroupUser> Users { get; set; }
 
-        public HyperGroup()
+        public HyperRoleGroup()
         {
-            this.Roles = new List<TGroupRole>();
-            this.Users = new List<TGroupUser>();
+            this.Roles = new List<TRoleGroupRole>();
+            this.Users = new List<TRoleGroupUser>();
         }
 
-        public HyperGroup(string name)
+        public HyperRoleGroup(string name)
             : this()
         {
             this.Name = name;
         }
 
-        public HyperGroup(string name, string description)
+        public HyperRoleGroup(string name, string description)
             : this(name)
         {
             this.Description = description;

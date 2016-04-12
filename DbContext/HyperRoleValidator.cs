@@ -12,7 +12,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Validates a role prior to saving it.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperRoleValidatorGuid<TUser> : HyperRoleValidator<TUser, HyperRoleGuid, Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperHostGuid, HyperHostDomainGuid, HyperGroupGuid, HyperGroupRoleGuid, HyperGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
+    public class HyperRoleValidatorGuid<TUser> : HyperRoleValidator<TUser, HyperRoleGuid, Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperHostGuid, HyperHostDomainGuid, HyperRoleGroupGuid, HyperRoleGroupRoleGuid, HyperRoleGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
         where TUser : HyperUserGuid, new()
     {
         /// <summary>
@@ -30,7 +30,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Validates a role prior to saving it.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperRoleValidatorInt<TUser> : HyperRoleValidator<TUser, HyperRoleInt, int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperHostInt, HyperHostDomainInt, HyperGroupInt, HyperGroupRoleInt, HyperGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
+    public class HyperRoleValidatorInt<TUser> : HyperRoleValidator<TUser, HyperRoleInt, int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperHostInt, HyperHostDomainInt, HyperRoleGroupInt, HyperRoleGroupRoleInt, HyperRoleGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
         where TUser : HyperUserInt, new()
     {
         /// <summary>
@@ -48,7 +48,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Validates a role prior to saving it.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperRoleValidatorLong<TUser> : HyperRoleValidator<TUser, HyperRoleLong, long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperHostLong, HyperHostDomainLong, HyperGroupLong, HyperGroupRoleLong, HyperGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
+    public class HyperRoleValidatorLong<TUser> : HyperRoleValidator<TUser, HyperRoleLong, long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperHostLong, HyperHostDomainLong, HyperRoleGroupLong, HyperRoleGroupRoleLong, HyperRoleGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
         where TUser : HyperUserLong, new()
     {
         /// <summary>
@@ -73,14 +73,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <typeparam name="TUserClaim">The type of the user claim.</typeparam>
     /// <typeparam name="THost">The type of the host.</typeparam>
     /// <typeparam name="THostDomain">The type of the host domain.</typeparam>
-    /// <typeparam name="TGroup">The type of the group.</typeparam>
-    /// <typeparam name="TGroupRole">The type of the group role.</typeparam>
-    /// <typeparam name="TGroupUser">The type of the group user.</typeparam>
+    /// <typeparam name="TRoleGroup">The type of the group.</typeparam>
+    /// <typeparam name="TRoleGroupRole">The type of the group role.</typeparam>
+    /// <typeparam name="TRoleGroupUser">The type of the group user.</typeparam>
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperRoleValidator<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : RoleValidator<TRole, TKey>, IDisposable
-        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TGroupUser>, IHyperUser<TKey>, new()
+    public class HyperRoleValidator<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> : RoleValidator<TRole, TKey>, IDisposable
+        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser>, IHyperUser<TKey>, new()
         where TRole : HyperRole<TKey, TUserRole>, IHyperRole<TKey>, new()
         where TKey : struct, IEquatable<TKey>
         where TUserLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
@@ -88,17 +88,17 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         where TUserClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
-        where TGroup : HyperGroup<TKey, TGroupRole, TGroupUser>, new()
-        where TGroupRole : HyperGroupRole<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroup : HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser>, new()
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
         where TAudit : HyperAudit<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
     {
-        protected readonly HyperRoleManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> Manager;
+        protected readonly HyperRoleManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> Manager;
         private bool disposed = false;
 
-        public HyperRoleValidator(HyperRoleManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> manager)
+        public HyperRoleValidator(HyperRoleManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> manager)
             : base(manager)
         {
             Contract.Requires<ArgumentNullException>(manager != null, "manager");

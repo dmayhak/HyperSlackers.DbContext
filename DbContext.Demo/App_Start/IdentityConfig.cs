@@ -151,16 +151,16 @@ namespace HyperSlackers.DbContext.Demo
     }
 
     // DRM Added
-    public class ApplicationGroupManager : HyperGroupManagerGuid<ApplicationUser>
+    public class ApplicationRoleGroupManager : HyperRoleGroupManagerGuid<ApplicationUser>
     {
-        public ApplicationGroupManager(HyperGroupStoreGuid<ApplicationUser> groupStore)
+        public ApplicationRoleGroupManager(HyperRoleGroupStoreGuid<ApplicationUser> groupStore)
             : base(groupStore)
         {
         }
 
-        public static ApplicationGroupManager Create(IdentityFactoryOptions<ApplicationGroupManager> options, IOwinContext context)
+        public static ApplicationRoleGroupManager Create(IdentityFactoryOptions<ApplicationRoleGroupManager> options, IOwinContext context)
         {
-            return new ApplicationGroupManager(new HyperGroupStoreGuid<ApplicationUser>(context.Get<ApplicationDbContext>()));
+            return new ApplicationRoleGroupManager(new HyperRoleGroupStoreGuid<ApplicationUser>(context.Get<ApplicationDbContext>()));
         }
     }
 

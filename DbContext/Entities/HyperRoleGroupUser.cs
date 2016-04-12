@@ -12,9 +12,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Linker that ties a user to a group
     /// </summary>
-    public class HyperGroupUserGuid : HyperGroupUser<Guid>
+    public class HyperRoleGroupUserGuid : HyperRoleGroupUser<Guid>
     {
-        public HyperGroupUserGuid()
+        public HyperRoleGroupUserGuid()
         {
             this.Id = Guid.NewGuid();
         }
@@ -23,7 +23,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Linker that ties a user to a group
     /// </summary>
-    public class HyperGroupUserInt : HyperGroupUser<int>
+    public class HyperRoleGroupUserInt : HyperRoleGroupUser<int>
     {
 
     }
@@ -31,7 +31,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// Linker that ties a user to a group
     /// </summary>
-    public class HyperGroupUserLong : HyperGroupUser<long>
+    public class HyperRoleGroupUserLong : HyperRoleGroupUser<long>
     {
 
     }
@@ -40,7 +40,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Linker that ties a user to a group
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
-    public class HyperGroupUser<TKey> : IAuditable<TKey>
+    public class HyperRoleGroupUser<TKey> : IAuditable<TKey>
         where TKey : struct, IEquatable<TKey>
     {
         [Key]
@@ -59,7 +59,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         [Required]
         [Index("IX_User_Group_Host_Global", 1)]
         [Index("IX_Group_User_Host_Global", 0)]
-        public TKey GroupId { get; set; }
+        public TKey RoleGroupId { get; set; }
 
         [Required]
         [Index("IX_User_Group_Host_Global", 0)]

@@ -14,7 +14,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// EntityFramework <c>IdentityUser</c> implementation for a multi-tenant <c>DbContext</c>.
     /// </summary>
-    public class HyperUserGuid : HyperUser<Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperGroupUserGuid>
+    public class HyperUserGuid : HyperUser<Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperRoleGroupUserGuid>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperUserGuid"/> class.
@@ -41,7 +41,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// EntityFramework <c>IdentityUser</c> implementation for a multi-tenant <c>DbContext</c>.
     /// </summary>
-    public class HyperUserInt : HyperUser<int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperGroupUserInt>
+    public class HyperUserInt : HyperUser<int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperRoleGroupUserInt>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperUserInt"/> class.
@@ -64,7 +64,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <summary>
     /// EntityFramework <c>IdentityUser</c> implementation for a multi-tenant <c>DbContext</c>.
     /// </summary>
-    public class HyperUserLong : HyperUser<long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperGroupUserLong>
+    public class HyperUserLong : HyperUser<long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperRoleGroupUserLong>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperUserLong"/> class.
@@ -91,12 +91,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <typeparam name="TLogin">The type of the login.</typeparam>
     /// <typeparam name="TRole">The type of the role.</typeparam>
     /// <typeparam name="TClaim">The type of the claim.</typeparam>
-    public class HyperUser<TKey, TLogin, TRole, TClaim, TGroupUser> : IdentityUser<TKey, TLogin, TRole, TClaim>, IHyperUser<TKey>
+    public class HyperUser<TKey, TLogin, TRole, TClaim, TRoleGroupUser> : IdentityUser<TKey, TLogin, TRole, TClaim>, IHyperUser<TKey>
         where TKey : struct, IEquatable<TKey>
         where TLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
         where TRole : HyperUserRole<TKey>, IHyperUserRole<TKey>, new()
         where TClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
     {
 
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -121,12 +121,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public bool IsGlobal { get; set; }
 
         /// <summary>
-        /// Gets or sets the groups the user belongs to.
+        /// Gets or sets the roleGroups the user belongs to.
         /// </summary>
         /// <value>
         /// The groups.
         /// </value>
-        public virtual ICollection<TGroupUser> Groups { get; set; }
+        public virtual ICollection<TRoleGroupUser> RoleGroups { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityUserMultiHost{TKey}"/> class.

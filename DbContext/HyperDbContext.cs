@@ -24,7 +24,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     ///     Grouping of roles
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperDbContextGuid<TUser> : HyperDbContext<HyperHostGuid, HyperHostDomainGuid, TUser, HyperRoleGuid, Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperGroupGuid, HyperGroupRoleGuid, HyperGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
+    public class HyperDbContextGuid<TUser> : HyperDbContext<HyperHostGuid, HyperHostDomainGuid, TUser, HyperRoleGuid, Guid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperRoleGroupGuid, HyperRoleGroupRoleGuid, HyperRoleGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
         where TUser : HyperUserGuid, new()
     {
         /// <summary>
@@ -53,7 +53,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     ///     Grouping of roles
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperDbContextInt<TUser> : HyperDbContext<HyperHostInt, HyperHostDomainInt, TUser, HyperRoleInt, int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperGroupInt, HyperGroupRoleInt, HyperGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
+    public class HyperDbContextInt<TUser> : HyperDbContext<HyperHostInt, HyperHostDomainInt, TUser, HyperRoleInt, int, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperRoleGroupInt, HyperRoleGroupRoleInt, HyperRoleGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
         where TUser : HyperUserInt, new()
     {
         /// <summary>
@@ -82,7 +82,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     ///     Grouping of roles
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperDbContextLong<TUser> : HyperDbContext<HyperHostLong, HyperHostDomainLong, TUser, HyperRoleLong, long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperGroupLong, HyperGroupRoleLong, HyperGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
+    public class HyperDbContextLong<TUser> : HyperDbContext<HyperHostLong, HyperHostDomainLong, TUser, HyperRoleLong, long, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperRoleGroupLong, HyperRoleGroupRoleLong, HyperRoleGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
         where TUser : HyperUserLong, new()
     {
         /// <summary>
@@ -118,24 +118,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <typeparam name="TUserLogin">The type of the user login.</typeparam>
     /// <typeparam name="TUserRole">The type of the user role.</typeparam>
     /// <typeparam name="TUserClaim">The type of the user claim.</typeparam>
-    /// <typeparam name="TGroup">The type of the group.</typeparam>
-    /// <typeparam name="TGroupRole">The type of the group role.</typeparam>
-    /// <typeparam name="TGroupUser">The type of the group user.</typeparam>
+    /// <typeparam name="TRoleGroup">The type of the group.</typeparam>
+    /// <typeparam name="TRoleGroupRole">The type of the group role.</typeparam>
+    /// <typeparam name="TRoleGroupUser">The type of the group user.</typeparam>
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextGroups<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty>
+    public class HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextRoleGroups<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty>
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
-        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TGroupUser>, IHyperUser<TKey>, new()
+        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser>, IHyperUser<TKey>, new()
         where TRole : HyperRole<TKey, TUserRole>, IHyperRole<TKey>, new()
         where TKey : struct, IEquatable<TKey>
         where TUserLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
         where TUserRole : HyperUserRole<TKey>, IHyperUserRole<TKey>, new()
         where TUserClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
-        where TGroup : HyperGroup<TKey, TGroupRole, TGroupUser>, new()
-        where TGroupRole : HyperGroupRole<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroup : HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser>, new()
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
         where TAudit : HyperAudit<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()

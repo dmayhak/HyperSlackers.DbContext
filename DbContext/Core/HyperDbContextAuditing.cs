@@ -31,18 +31,18 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperDbContextAuditing<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextBase<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty>
+    public class HyperDbContextAuditing<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextBase<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty>
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
-        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TGroupUser>, IHyperUser<TKey>, new()
+        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser>, IHyperUser<TKey>, new()
         where TRole : HyperRole<TKey, TUserRole>, IHyperRole<TKey>, new()
         where TKey : struct, IEquatable<TKey>
         where TUserLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
         where TUserRole : HyperUserRole<TKey>, IHyperUserRole<TKey>, new()
         where TUserClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
-        where TGroup : HyperGroup<TKey, TGroupRole, TGroupUser>, new()
-        where TGroupRole : HyperGroupRole<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroup : HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser>, new()
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
         where TAudit : HyperAudit<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
@@ -139,7 +139,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         public override int SaveChanges()
         {
             // set this on each call so that multiple call to save changes each get a new time
-            this.auditDate = DateTime.Now;
+            this.auditDate = DateTime.UtcNow;
 
             ChangeTracker.DetectChanges(); //! important to call this prior to auditing, etc.
 
@@ -165,7 +165,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         public async override Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
             // set this on each call so that multiple call to save changes each get a new time
-            this.auditDate = DateTime.Now;
+            this.auditDate = DateTime.UtcNow;
 
             ChangeTracker.DetectChanges(); //! important to call this prior to auditing, etc.
 

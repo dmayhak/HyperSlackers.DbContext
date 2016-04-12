@@ -144,7 +144,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
             {
                 context.SaveChanges();
                 userManager.AddToRole(user.Id, "User", true); // global user role
-                userManager.AddToGroup(localHost.Id, user.Id, "Manager"); // localhost's manager group
+                userManager.AddToRoleGroup(localHost.Id, user.Id, "Manager"); // localhost's manager group
                 context.SaveChanges();
             }
         }
@@ -167,7 +167,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
             var group = context.RoleGroups.SingleOrDefault(g => g.HostId == hostId && g.Name == groupName);
             if (group == null)
             {
-                context.RoleGroups.Add(new HyperGroupGuid() { HostId = hostId, Name = groupName, IsGlobal = isGlobal });
+                context.RoleGroups.Add(new HyperRoleGroupGuid() { HostId = hostId, Name = groupName, IsGlobal = isGlobal });
 
                 context.SaveChanges();
 
@@ -182,10 +182,10 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                     role = context.Roles.SingleOrDefault(r => r.IsGlobal == true && r.Name == item); // look for global role
                 }
 
-                var gr = context.RoleGroupRoles.SingleOrDefault(rgr => rgr.GroupId == group.Id && rgr.RoleId == role.Id);
+                var gr = context.RoleGroupRoles.SingleOrDefault(rgr => rgr.RoleGroupId == group.Id && rgr.RoleId == role.Id);
                 if (gr == null)
                 {
-                    context.RoleGroupRoles.Add(new HyperGroupRoleGuid() { GroupId = group.Id, RoleId = role.Id });
+                    context.RoleGroupRoles.Add(new HyperRoleGroupRoleGuid() { RoleGroupId = group.Id, RoleId = role.Id });
                 }
             }
 

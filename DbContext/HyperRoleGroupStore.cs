@@ -13,14 +13,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Object for maintaining the data store for groups of roles and assigning of groups to users.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperGroupStoreGuid<TUser> : HyperGroupStore<HyperHostGuid, HyperHostDomainGuid, Guid, TUser, HyperRoleGuid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperGroupGuid, HyperGroupRoleGuid, HyperGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
+    public class HyperRoleGroupStoreGuid<TUser> : HyperRoleGroupStore<HyperHostGuid, HyperHostDomainGuid, Guid, TUser, HyperRoleGuid, HyperUserLoginGuid, HyperUserRoleGuid, HyperUserClaimGuid, HyperRoleGroupGuid, HyperRoleGroupRoleGuid, HyperRoleGroupUserGuid, HyperAuditGuid, HyperAuditItemGuid, HyperAuditPropertyGuid>
         where TUser : HyperUserGuid, new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperGroupStoreGuid{TUser}"/> class.
+        /// Initializes a new instance of the <see cref="HyperRoleGroupStoreGuid{TUser}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public HyperGroupStoreGuid(HyperDbContextGuid<TUser> context)
+        public HyperRoleGroupStoreGuid(HyperDbContextGuid<TUser> context)
             : base(context)
         {
             Contract.Requires<ArgumentNullException>(context != null, "context");
@@ -31,14 +31,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Object for maintaining the data store for groups of roles and assigning of groups to users.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperGroupStoreInt<TUser> : HyperGroupStore<HyperHostInt, HyperHostDomainInt, int, TUser, HyperRoleInt, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperGroupInt, HyperGroupRoleInt, HyperGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
+    public class HyperRoleGroupStoreInt<TUser> : HyperRoleGroupStore<HyperHostInt, HyperHostDomainInt, int, TUser, HyperRoleInt, HyperUserLoginInt, HyperUserRoleInt, HyperUserClaimInt, HyperRoleGroupInt, HyperRoleGroupRoleInt, HyperRoleGroupUserInt, HyperAuditInt, HyperAuditItemInt, HyperAuditPropertyInt>
         where TUser : HyperUserInt, new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperGroupStoreInt{TUser}"/> class.
+        /// Initializes a new instance of the <see cref="HyperRoleGroupStoreInt{TUser}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public HyperGroupStoreInt(HyperDbContextInt<TUser> context)
+        public HyperRoleGroupStoreInt(HyperDbContextInt<TUser> context)
             : base(context)
         {
             Contract.Requires<ArgumentNullException>(context != null, "context");
@@ -49,14 +49,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Object for maintaining the data store for groups of roles and assigning of groups to users.
     /// </summary>
     /// <typeparam name="TUser">The type of the user.</typeparam>
-    public class HyperGroupStoreLong<TUser> : HyperGroupStore<HyperHostLong, HyperHostDomainLong, long, TUser, HyperRoleLong, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperGroupLong, HyperGroupRoleLong, HyperGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
+    public class HyperRoleGroupStoreLong<TUser> : HyperRoleGroupStore<HyperHostLong, HyperHostDomainLong, long, TUser, HyperRoleLong, HyperUserLoginLong, HyperUserRoleLong, HyperUserClaimLong, HyperRoleGroupLong, HyperRoleGroupRoleLong, HyperRoleGroupUserLong, HyperAuditLong, HyperAuditItemLong, HyperAuditPropertyLong>
         where TUser : HyperUserLong, new()
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperGroupStoreLong{TUser}"/> class.
+        /// Initializes a new instance of the <see cref="HyperRoleGroupStoreLong{TUser}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public HyperGroupStoreLong(HyperDbContextLong<TUser> context)
+        public HyperRoleGroupStoreLong(HyperDbContextLong<TUser> context)
             : base(context)
         {
             Contract.Requires<ArgumentNullException>(context != null, "context");
@@ -74,59 +74,59 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// <typeparam name="TUserLogin">The type of the user login.</typeparam>
     /// <typeparam name="TUserRole">The type of the user role.</typeparam>
     /// <typeparam name="TUserClaim">The type of the user claim.</typeparam>
-    /// <typeparam name="TGroup">The type of the group.</typeparam>
-    /// <typeparam name="TGroupRole">The type of the group role.</typeparam>
-    /// <typeparam name="TGroupUser">The type of the group user.</typeparam>
+    /// <typeparam name="TRoleGroup">The type of the group.</typeparam>
+    /// <typeparam name="TRoleGroupRole">The type of the group role.</typeparam>
+    /// <typeparam name="TRoleGroupUser">The type of the group user.</typeparam>
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperGroupStore<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : IDisposable
+    public class HyperRoleGroupStore<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> : IDisposable
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
         where TKey : struct, IEquatable<TKey>
-        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TGroupUser>, IHyperUser<TKey>, new()
+        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser>, IHyperUser<TKey>, new()
         where TRole : HyperRole<TKey, TUserRole>, IHyperRole<TKey>, new()
         where TUserLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
         where TUserRole : HyperUserRole<TKey>, IHyperUserRole<TKey>, new()
         where TUserClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
-        where TGroup : HyperGroup<TKey, TGroupRole, TGroupUser>, new()
-        where TGroupRole : HyperGroupRole<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroup : HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser>, new()
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
         where TAudit : HyperAudit<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
     {
-        protected internal readonly bool GroupsEnabled;
-        protected internal readonly HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> HyperContext;
+        protected internal readonly bool RoleGroupsEnabled;
+        protected internal readonly HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> HyperContext;
 
         public bool MultiHostEnabled { get { return HyperContext.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperContext.SystemHostId; } }
         public TKey CurrentHostId { get { return HyperContext.CurrentHostId; } }
 
         public bool AutoSaveChanges { get; set; }
-        private readonly IDbSet<TGroup> groups;
-        private readonly IDbSet<TGroupRole> groupRoles;
-        private readonly IDbSet<TGroupUser> groupUsers;
+        private readonly IDbSet<TRoleGroup> groups;
+        private readonly IDbSet<TRoleGroupRole> groupRoles;
+        private readonly IDbSet<TRoleGroupUser> groupUsers;
         private readonly IDbSet<TRole> roles;
         private readonly IDbSet<TUser> users;
         private readonly IDbSet<TUserRole> userRoles;
         private bool disposed = false;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperHostStore{TGroup, TKey}"/> class.
+        /// Initializes a new instance of the <see cref="HyperHostStore{TRoleGroup, TKey}"/> class.
         /// </summary>
         /// <param name="context">The context.</param>
-        public HyperGroupStore(HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> context)
+        public HyperRoleGroupStore(HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> context)
         {
             Contract.Requires<ArgumentNullException>(context != null, "context");
 
             this.HyperContext = context;
             this.AutoSaveChanges = true;
-            this.GroupsEnabled = context.RoleGroupsEnabled;
+            this.RoleGroupsEnabled = context.RoleGroupsEnabled;
 
-            this.groups = HyperContext.Set<TGroup>();
-            this.groupRoles = HyperContext.Set<TGroupRole>();
-            this.groupUsers = HyperContext.Set<TGroupUser>();
+            this.groups = HyperContext.Set<TRoleGroup>();
+            this.groupRoles = HyperContext.Set<TRoleGroupRole>();
+            this.groupUsers = HyperContext.Set<TRoleGroupUser>();
             this.roles = HyperContext.Set<TRole>();
             this.users = HyperContext.Set<TUser>();
             this.userRoles = HyperContext.Set<TUserRole>();
@@ -145,7 +145,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// Gets all groups for all hosts.
         /// </summary>
         /// <returns></returns>
-        public IQueryable<TGroup> GetAllGroups()
+        public IQueryable<TRoleGroup> GetAllRoleGroups()
         {
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -157,12 +157,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// Gets all groups for current host plus the system host.
         /// </summary>
         /// <returns></returns>
-        public IQueryable<TGroup> GetGroups()
+        public IQueryable<TRoleGroup> GetRoleGroups()
         {
             ThrowIfDisabled();
             ThrowIfDisposed();
 
-            return GetGroups(this.CurrentHostId);
+            return GetRoleGroups(this.CurrentHostId);
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <returns></returns>
-        public IQueryable<TGroup> GetGroups(TKey hostId)
+        public IQueryable<TRoleGroup> GetRoleGroups(TKey hostId)
         {
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -179,12 +179,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Creates a <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers} in the datastore"/>.
+        /// Creates a <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers} in the datastore"/>.
         /// </summary>
         /// <param name="group">The group.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException">Global groups must belong to system host.</exception>
-        public virtual async Task CreateAsync(TGroup group)
+        public virtual async Task CreateAsync(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -209,11 +209,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Deletes a <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers}"/> from the data store.
+        /// Deletes a <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers}"/> from the data store.
         /// </summary>
         /// <param name="group">The group.</param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(TGroup group)
+        public virtual async Task DeleteAsync(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -228,11 +228,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Updates an existing <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers}"/> in the data store.
+        /// Updates an existing <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers}"/> in the data store.
         /// </summary>
         /// <param name="group">The group.</param>
         /// <returns></returns>
-        public virtual async Task UpdateAsync(TGroup group)
+        public virtual async Task UpdateAsync(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -249,11 +249,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Finds a <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers}"/> by id.
+        /// Finds a <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers}"/> by id.
         /// </summary>
         /// <param name="groupId">The group identifier.</param>
         /// <returns></returns>
-        public async Task<TGroup> FindByIdAsync(TKey groupId)
+        public async Task<TRoleGroup> FindByIdAsync(TKey groupId)
         {
             Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)));
 
@@ -264,11 +264,11 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Finds a <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers}"/> by name.
+        /// Finds a <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers}"/> by name.
         /// </summary>
         /// <param name="groupName">Name of the group.</param>
         /// <returns></returns>
-        public async Task<TGroup> FindByNameAsync(string groupName)
+        public async Task<TRoleGroup> FindByNameAsync(string groupName)
         {
             Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
 
@@ -279,12 +279,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         }
 
         /// <summary>
-        /// Finds a <see cref="HyperGroup{TKey, TGroupRoles, TGroupUsers}" /> by name.
+        /// Finds a <see cref="HyperRoleGroup{TKey, TGroupRoles, TGroupUsers}" /> by name.
         /// </summary>
         /// <param name="hostId">The host identifier.</param>
         /// <param name="groupName">Name of the group.</param>
         /// <returns></returns>
-        public async Task<TGroup> FindByNameAsync(TKey hostId, string groupName)
+        public async Task<TRoleGroup> FindByNameAsync(TKey hostId, string groupName)
         {
             Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)));
             Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
@@ -300,7 +300,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The group identifier.</param>
         /// <returns></returns>
-        public async Task<IList<TRole>> GetRolesAsync(TGroup group)
+        public async Task<IList<TRole>> GetRolesAsync(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -309,7 +309,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var groupId = group.Id;
 
-            var roleIds = groupRoles.Where(gr => gr.GroupId.Equals(groupId)).Select(gr => gr.RoleId).ToArray();
+            var roleIds = groupRoles.Where(gr => gr.RoleGroupId.Equals(groupId)).Select(gr => gr.RoleId).ToArray();
 
             return await roles.Where(r => roleIds.Contains(r.Id)).ToListAsync();
         }
@@ -319,7 +319,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </summary>
         /// <param name="hostId">The group identifier.</param>
         /// <returns></returns>
-        public async Task<IList<TUser>> GetUsersAsync(TGroup group)
+        public async Task<IList<TUser>> GetUsersAsync(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -328,7 +328,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             var groupId = group.Id;
 
-            var userIds = groupUsers.Where(gu => gu.GroupId.Equals(groupId)).Select(gu => gu.UserId).ToArray();
+            var userIds = groupUsers.Where(gu => gu.RoleGroupId.Equals(groupId)).Select(gu => gu.UserId).ToArray();
 
             return await users.Where(u => userIds.Contains(u.Id)).ToListAsync();
         }
@@ -340,7 +340,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="role">The role.</param>
         /// <returns></returns>
         /// <exception cref="System.ArgumentException"></exception>
-        public virtual async Task AddRoleAsync(TGroup group, TRole role)
+        public virtual async Task AddRoleAsync(TRoleGroup group, TRole role)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
             Contract.Requires<ArgumentNullException>(role != null, "role");
@@ -352,7 +352,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             var roleId = role.Id;
 
             // check if it already exists
-            if (await groupRoles.AnyAsync(gr => gr.GroupId.Equals(groupId) && gr.RoleId.Equals(roleId)))
+            if (await groupRoles.AnyAsync(gr => gr.RoleGroupId.Equals(groupId) && gr.RoleId.Equals(roleId)))
             {
                 throw new ArgumentException(string.Format("Group '{0}' already contains Role {1}.", group.Name, role.Name));
             }
@@ -368,8 +368,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
 
 
-            var groupRole = new TGroupRole();
-            groupRole.GroupId = groupId;
+            var groupRole = new TRoleGroupRole();
+            groupRole.RoleGroupId = groupId;
             groupRole.RoleId = roleId;
 
             groupRoles.Add(groupRole);
@@ -378,7 +378,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             RefreshAllUsresInGroup(group.Id);
         }
 
-        public virtual async Task RemoveRoleAsync(TGroup group, TRole role)
+        public virtual async Task RemoveRoleAsync(TRoleGroup group, TRole role)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
             Contract.Requires<ArgumentNullException>(role != null, "role");
@@ -389,7 +389,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             var groupId = group.Id;
             var roleId = role.Id;
 
-            var groupRole = await groupRoles.SingleOrDefaultAsync(gr => gr.GroupId.Equals(groupId) && gr.RoleId.Equals(roleId));
+            var groupRole = await groupRoles.SingleOrDefaultAsync(gr => gr.RoleGroupId.Equals(groupId) && gr.RoleId.Equals(roleId));
 
             if (groupRole != null)
             {
@@ -402,36 +402,36 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         private IList<TKey> GetUserIdsForGroup(TKey groupId)
         {
-            return groupUsers.Where(gu => gu.GroupId.Equals(groupId)).Select(gu => gu.UserId).ToList();
+            return groupUsers.Where(gu => gu.RoleGroupId.Equals(groupId)).Select(gu => gu.UserId).ToList();
         }
 
-        private IList<TKey> GetGroupIdsForUser(TKey userId)
+        private IList<TKey> GetRoleGroupIdsForUser(TKey userId)
         {
-            return groupUsers.Where(gu => gu.UserId.Equals(userId)).Select(gu => gu.GroupId).ToList();
+            return groupUsers.Where(gu => gu.UserId.Equals(userId)).Select(gu => gu.RoleGroupId).ToList();
         }
 
         private IList<TKey> GetRoleIdsForGroup(TKey groupId)
         {
-            return groupRoles.Where(gr => gr.GroupId.Equals(groupId)).Select(gr => gr.RoleId).ToList();
+            return groupRoles.Where(gr => gr.RoleGroupId.Equals(groupId)).Select(gr => gr.RoleId).ToList();
         }
 
         private IList<TKey> GetRoleIdsForGroups(IList<TKey> groupIds)
         {
-            return groupRoles.Where(gr => groupIds.Contains(gr.GroupId)).Select(gr => gr.RoleId).ToList();
+            return groupRoles.Where(gr => groupIds.Contains(gr.RoleGroupId)).Select(gr => gr.RoleId).ToList();
         }
 
         private IList<TKey> GetRoleIdsForUser(TKey userId)
         {
-            var groupIds = GetGroupIdsForUser(userId);
+            var groupIds = GetRoleGroupIdsForUser(userId);
 
-            return groupRoles.Where(gr => groupIds.Contains(gr.GroupId)).Select(gr => gr.RoleId).Distinct().ToList();
+            return groupRoles.Where(gr => groupIds.Contains(gr.RoleGroupId)).Select(gr => gr.RoleId).Distinct().ToList();
         }
 
         private void RefreshUserRoles(TKey userId)
         {
             var oldRoleIds = GetRoleIdsForUser(userId);
-            var groupIds = GetGroupIdsForUser(userId);
-            var newRoleIds = GetRoleIdsForGroups(GetGroupIdsForUser(userId));
+            var groupIds = GetRoleGroupIdsForUser(userId);
+            var newRoleIds = GetRoleIdsForGroups(GetRoleGroupIdsForUser(userId));
 
             var user = users.Find(userId);
             if (user == null)
@@ -479,39 +479,39 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
         }
 
-        private bool AreRolesLoaded(TGroup group)
+        private bool AreRolesLoaded(TRoleGroup group)
         {
             return HyperContext.Entry(group).Collection(g => g.Roles).IsLoaded;
         }
 
-        private async Task EnsureRolesLoaded(TGroup group)
+        private async Task EnsureRolesLoaded(TRoleGroup group)
         {
             if (!AreRolesLoaded(group))
             {
                 var groupId = group.Id;
-                await groupRoles.Where(gr => gr.GroupId.Equals(groupId)).LoadAsync().WithCurrentCulture();
+                await groupRoles.Where(gr => gr.RoleGroupId.Equals(groupId)).LoadAsync().WithCurrentCulture();
                 HyperContext.Entry(group).Collection(g => g.Roles).IsLoaded = true;
             }
         }
 
-        private bool AreUsersLoaded(TGroup group)
+        private bool AreUsersLoaded(TRoleGroup group)
         {
             return HyperContext.Entry(group).Collection(g => g.Users).IsLoaded;
         }
 
-        private async Task EnsureUsersLoaded(TGroup group)
+        private async Task EnsureUsersLoaded(TRoleGroup group)
         {
             if (!AreUsersLoaded(group))
             {
                 var groupId = group.Id;
-                await groupUsers.Where(gu => gu.GroupId.Equals(groupId)).LoadAsync().WithCurrentCulture();
+                await groupUsers.Where(gu => gu.RoleGroupId.Equals(groupId)).LoadAsync().WithCurrentCulture();
                 HyperContext.Entry(group).Collection(g => g.Users).IsLoaded = true;
             }
         }
 
         private void ThrowIfDisabled()
         {
-            if (!this.GroupsEnabled)
+            if (!this.RoleGroupsEnabled)
             {
                 throw new InvalidOperationException("Groups are not enabled for this context.");
             }

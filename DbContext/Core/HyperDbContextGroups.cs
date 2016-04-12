@@ -31,24 +31,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
     /// <typeparam name="TUserLogin">The type of the user login.</typeparam>
     /// <typeparam name="TUserRole">The type of the user role.</typeparam>
     /// <typeparam name="TUserClaim">The type of the user claim.</typeparam>
-    /// <typeparam name="TGroup">The type of the group.</typeparam>
-    /// <typeparam name="TGroupRole">The type of the group role.</typeparam>
-    /// <typeparam name="TGroupUser">The type of the group user.</typeparam>
+    /// <typeparam name="TRoleGroup">The type of the group.</typeparam>
+    /// <typeparam name="TRoleGroupRole">The type of the group role.</typeparam>
+    /// <typeparam name="TRoleGroupUser">The type of the group user.</typeparam>
     /// <typeparam name="TAudit">The type of the audit.</typeparam>
     /// <typeparam name="TAuditItem">The type of the audit item.</typeparam>
     /// <typeparam name="TAuditProperty">The type of the audit property.</typeparam>
-    public class HyperDbContextGroups<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextMultiHost<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser, TAudit, TAuditItem, TAuditProperty>
+    public class HyperDbContextRoleGroups<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> : HyperDbContextMultiHost<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty>
         where THost : HyperHost<TKey, THost, THostDomain>, new()
         where THostDomain : HyperHostDomain<TKey, THost, THostDomain>, new()
-        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TGroupUser>, IHyperUser<TKey>, new()
+        where TUser : HyperUser<TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser>, IHyperUser<TKey>, new()
         where TRole : HyperRole<TKey, TUserRole>, IHyperRole<TKey>, new()
         where TKey : struct, IEquatable<TKey>
         where TUserLogin : HyperUserLogin<TKey>, IHyperUserLogin<TKey>, new()
         where TUserRole : HyperUserRole<TKey>, IHyperUserRole<TKey>, new()
         where TUserClaim : HyperUserClaim<TKey>, IHyperUserClaim<TKey>, new()
-        where TGroup : HyperGroup<TKey, TGroupRole, TGroupUser>, new()
-        where TGroupRole : HyperGroupRole<TKey>, new()
-        where TGroupUser : HyperGroupUser<TKey>, new()
+        where TRoleGroup : HyperRoleGroup<TKey, TRoleGroupRole, TRoleGroupUser>, new()
+        where TRoleGroupRole : HyperRoleGroupRole<TKey>, new()
+        where TRoleGroupUser : HyperRoleGroupUser<TKey>, new()
         where TAudit : HyperAudit<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
@@ -69,23 +69,23 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         protected internal bool RoleGroupsEnabled { get; set; }
 
         //! role-groups dbsets
-        public DbSet<TGroup> RoleGroups { get; set; }
-        public DbSet<TGroupRole> RoleGroupRoles { get; set; }
-        public DbSet<TGroupUser> RoleGroupUsers { get; set; }
+        public DbSet<TRoleGroup> RoleGroups { get; set; }
+        public DbSet<TRoleGroupRole> RoleGroupRoles { get; set; }
+        public DbSet<TRoleGroupUser> RoleGroupUsers { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperDbContextGroups{THost, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser}" /> class.
+        /// Initializes a new instance of the <see cref="HyperDbContextRoleGroups{THost, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser}" /> class.
         /// </summary>
-        protected HyperDbContextGroups()
+        protected HyperDbContextRoleGroups()
             : this("DefaultConnection")
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HyperDbContextGroups{THost, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TGroup, TGroupRole, TGroupUser}" /> class.
+        /// Initializes a new instance of the <see cref="HyperDbContextRoleGroups{THost, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser}" /> class.
         /// </summary>
         /// <param name="nameOrConnectionString"></param>
-        protected HyperDbContextGroups(string nameOrConnectionString)
+        protected HyperDbContextRoleGroups(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
             Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
@@ -102,24 +102,24 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             base.OnModelCreating(modelBuilder);
 
             // fix up table names, indexes, and identity columns (Guid Id columns are not db-assigned)
-            modelBuilder.Entity<TGroup>()
+            modelBuilder.Entity<TRoleGroup>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<TGroupRole>()
+            modelBuilder.Entity<TRoleGroupRole>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
-            modelBuilder.Entity<TGroupUser>()
+            modelBuilder.Entity<TRoleGroupUser>()
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
 
 
-            modelBuilder.Entity<TGroup>()
+            modelBuilder.Entity<TRoleGroup>()
                 .ToTable((RoleGroupsGroupsTableName.IsNullOrWhiteSpace() ? "AspNetGroups" : RoleGroupsGroupsTableName), (RoleGroupsSchemaName.IsNullOrWhiteSpace() ? "dbo" : RoleGroupsSchemaName));
 
-            modelBuilder.Entity<TGroupRole>()
+            modelBuilder.Entity<TRoleGroupRole>()
                 .ToTable((RoleGroupsGroupRolesTableName.IsNullOrWhiteSpace() ? "AspNetGroupRoles" : RoleGroupsGroupRolesTableName), (RoleGroupsSchemaName.IsNullOrWhiteSpace() ? "dbo" : RoleGroupsSchemaName));
 
-            modelBuilder.Entity<TGroupUser>()
+            modelBuilder.Entity<TRoleGroupUser>()
                 .ToTable((RoleGroupsGroupUsersTableName.IsNullOrWhiteSpace() ? "AspNetGroupUsers" : RoleGroupsGroupUsersTableName), (RoleGroupsSchemaName.IsNullOrWhiteSpace() ? "dbo" : RoleGroupsSchemaName));
         }
 
@@ -129,9 +129,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             {
                 var errors = new List<DbValidationError>();
 
-                if (entityEntry.Entity is TGroup)
+                if (entityEntry.Entity is TRoleGroup)
                 {
-                    var group = entityEntry.Entity as TGroup;
+                    var group = entityEntry.Entity as TRoleGroup;
                     errors.AddRange(ValidateRoleGroup(group));
                 }
 
@@ -144,7 +144,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             return base.ValidateEntity(entityEntry, items);
         }
 
-        private List<DbValidationError> ValidateRoleGroup(TGroup group)
+        private List<DbValidationError> ValidateRoleGroup(TRoleGroup group)
         {
             Contract.Requires<ArgumentNullException>(group != null, "group");
 
@@ -161,7 +161,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             {
                 if (!group.HostId.Equals(this.SystemHostId))
                 {
-                    errors.Add(new DbValidationError("RoleGroup", "Global groups must belong to system host."));
+                    errors.Add(new DbValidationError("RoleGroup", "Global RoleGroups must belong to system host."));
                 }
             }
 
@@ -171,7 +171,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                 // either as a system role or on any host
                 var groupId = group.Id;
                 var groupName = group.Name;
-                List<TGroup> existingGroups = this.RoleGroups.Where(g => g.Name == groupName).ToList();
+                List<TRoleGroup> existingGroups = this.RoleGroups.Where(g => g.Name == groupName).ToList();
 
                 if (existingGroups.Any(g => !g.Id.Equals(groupId)))
                 {
@@ -184,7 +184,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                 var groupId = group.Id;
                 var groupName = group.Name;
                 var hostId = group.HostId;
-                List<TGroup> existingHostGroups = this.RoleGroups.Where(g => g.Name == groupName && g.HostId.Equals(hostId)).ToList();
+                List<TRoleGroup> existingHostGroups = this.RoleGroups.Where(g => g.Name == groupName && g.HostId.Equals(hostId)).ToList();
 
                 if (existingHostGroups.Any(g => !g.Id.Equals(groupId)))
                 {
@@ -192,7 +192,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                 }
 
                 // group cannot exist as global
-                List<TGroup> existingGlobalGroups = this.RoleGroups.Where(g => g.Name == groupName && g.IsGlobal == true).ToList();
+                List<TRoleGroup> existingGlobalGroups = this.RoleGroups.Where(g => g.Name == groupName && g.IsGlobal == true).ToList();
 
                 if (existingGlobalGroups.Any(g => !g.Id.Equals(groupId)))
                 {
