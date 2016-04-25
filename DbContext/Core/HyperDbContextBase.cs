@@ -48,6 +48,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         private THost systemHost = null;
         private THost currentHost = null;
         private TUser currentUser = null;
+        private TUser anonymousUser = null;
 
         /// <summary>
         /// Gets or sets a value indicating whether multi-host functionality is enabled or not.
@@ -105,10 +106,30 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                     {
                         //TODO: hopefully we only hit this when creating the migration and db does not exist
                         System.Diagnostics.Debug.WriteLine("CurrentHost.Get Failed: " + ex.Message);
+
+
                     }
                 }
 
                 return currentHost;
+            }
+        }
+
+        /// <summary>
+        /// Gets the anonymous user. (Used for logging/auditing)
+        /// </summary>
+        /// <value>
+        /// The anonymous user.
+        /// </value>
+        public virtual TUser AnonymousUser
+        {
+            get
+            {
+                return anonymousUser;
+            }
+            protected set
+            {
+                anonymousUser = value;
             }
         }
 
@@ -255,6 +276,44 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 if (CurrentUser != null)
                 {
                     return currentUser.Id;
+                }
+
+                return default(TKey);
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the anonymous user. (Used for logging/auditing)
+        /// </summary>
+        /// <value>
+        /// The name of the user.
+        /// </value>
+        public string AnonymousUserName
+        {
+            get
+            {
+                if (AnonymousUser != null)
+                {
+                    return anonymousUser.UserName;
+                }
+
+                return defaultName;
+            }
+        }
+
+        /// <summary>
+        /// Gets the anonymous user's identifier. (Used for logging/auditing)
+        /// </summary>
+        /// <value>
+        /// The user identifier.
+        /// </value>
+        public TKey AnonymousUserId
+        {
+            get
+            {
+                if (AnonymousUser != null)
+                {
+                    return anonymousUser.Id;
                 }
 
                 return default(TKey);

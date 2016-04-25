@@ -341,9 +341,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// </summary>
         private void UpdateAuditUserAndDateFields()
         {
+            var userId = (!this.CurrentUserId.Equals(default(TKey)) ? this.CurrentUserId : this.AnonymousUserId);
+
             // set created and last changed fields for added entities
             var addedEntities = ((IObjectContextAdapter)this).ObjectContext.ObjectStateManager.GetObjectStateEntries(System.Data.Entity.EntityState.Added).Where(ose => !ose.IsRelationship);
             //var addedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Added);
+
             foreach (var item in addedEntities)
             {
                 IAuditableDate<TKey> dateEntity = item.Entity as IAuditableDate<TKey>;
@@ -355,8 +358,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                     IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
                     if (userEntity != null)
                     {
-                        userEntity.CreatedBy = this.CurrentUserId;
-                        userEntity.LastChangedBy = this.CurrentUserId;
+                        userEntity.CreatedBy = userId;
+                        userEntity.LastChangedBy = userId;
                     }
                 }
             }
@@ -374,7 +377,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                     IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
                     if (userEntity != null)
                     {
-                        userEntity.LastChangedBy = this.CurrentUserId;
+                        userEntity.LastChangedBy = userId;
                     }
                 }
             }
@@ -385,7 +388,14 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// </summary>
         private void CreateAuditRecords()
         {
-            this.currentAudit = new TAudit() { AuditDate = this.auditDate, HostId = this.CurrentHostId, HostName = this.CurrentHostName, UserId = this.CurrentUserId, UserName = this.CurrentUserName };
+            this.currentAudit = new TAudit()
+            {
+                AuditDate = this.auditDate,
+                HostId = (!this.CurrentHostId.Equals(default(TKey)) ? this.CurrentHostId : this.SystemHostId),
+                HostName = (!this.CurrentHostId.Equals(default(TKey)) ? this.CurrentHostName : this.SystemHostName),
+                UserId = (!this.CurrentUserId.Equals(default(TKey)) ? this.CurrentUserId : this.AnonymousUserId),
+                UserName = (!this.CurrentUserId.Equals(default(TKey)) ? this.CurrentUserName : this.AnonymousUserName)
+            };
             this.currentAuditProperties = new List<TAuditProperty>();
             this.currentAuditItems = new List<TAuditItem>();
 

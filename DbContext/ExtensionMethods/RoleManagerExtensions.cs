@@ -173,7 +173,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             Contract.Requires<ArgumentNullException>(manager != null, "manager");
             Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
 
-            var hostId = global ? manager.SystemHostId : manager.HostId;
+            var hostId = global ? manager.SystemHostId : manager.CurrentHostId;
 
             return AsyncHelper.RunSync(() => manager.CreateAsync(hostId, roleName, global));
         }

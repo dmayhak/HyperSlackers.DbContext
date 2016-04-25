@@ -58,7 +58,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
             }
 
             // we can re-enable auditing here if we want, or at the end if we don't want to audit this stuff
-            context.AuditingEnabled = auditingEnabled;
+            //context.AuditingEnabled = auditingEnabled;
 
             // add the "other" host (will respond to "localhost" in URL)
             var localHost = hostManager.FindByDomain("localhost");
@@ -100,9 +100,20 @@ namespace HyperSlackers.DbContext.Demo.Migrations
             context.SaveChanges();
 
             // create some users
+
+            ApplicationUser user = new ApplicationUser() { HostId = systemHost.Id, UserName = "anonymous", Email = "anonymous@systemhost.com", IsGlobal = true };
+            var result = userManager.Create(user, Guid.NewGuid().ToString());
+            if (result.Succeeded)
+            {
+                context.SaveChanges();
+                userManager.AddToRole(user.Id, "User", true); // global user role
+                userManager.AddToRoleGroup(localHost.Id, user.Id, "Manager"); // localhost's manager group
+                context.SaveChanges();
+            }
+
             // super
-            ApplicationUser user = new ApplicationUser() { HostId = systemHost.Id, UserName = "super@systemhost.com", Email = "super@systemhost.com", IsGlobal = true };
-            var result = userManager.Create(user, "super_system");
+            user = new ApplicationUser() { HostId = systemHost.Id, UserName = "super@systemhost.com", Email = "super@systemhost.com", IsGlobal = true };
+            result = userManager.Create(user, "super_system");
             if (result.Succeeded)
             {
                 context.SaveChanges();
@@ -147,6 +158,9 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                 userManager.AddToRoleGroup(localHost.Id, user.Id, "Manager"); // localhost's manager group
                 context.SaveChanges();
             }
+
+            // turn auditing back on
+            context.AuditingEnabled = auditingEnabled;
         }
 
         // DRM Added

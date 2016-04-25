@@ -108,7 +108,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperUserStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperUserStore.SystemHostId; } }
-        public TKey HostId { get { return HyperUserStore.CurrentHostId; } }
+        public TKey CurrentHostId { get { return HyperUserStore.CurrentHostId; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperUserManager{TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty}"/> class.
@@ -133,7 +133,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             get
             {
                 var users = base.Users;
-                var hostId = this.HostId;
+                var hostId = this.CurrentHostId;
 
                 return users.Where(u => u.HostId.Equals(hostId) || u.IsGlobal);
             }
@@ -163,7 +163,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddClaimAsync(this.HostId, userId, claim);
+            return await AddClaimAsync(this.CurrentHostId, userId, claim);
         }
 
         /// <summary>
@@ -211,13 +211,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                 throw new InvalidOperationException(String.Format("UserId {0} not found.", userId));
             }
 
-            var existingUser = await FindAsync(this.HostId, login).WithCurrentCulture();
+            var existingUser = await FindAsync(this.CurrentHostId, login).WithCurrentCulture();
             if (existingUser != null)
             {
                 return IdentityResult.Failed("External login already exists");
             }
 
-            await HyperUserStore.AddLoginAsync(this.HostId, user, login);
+            await HyperUserStore.AddLoginAsync(this.CurrentHostId, user, login);
 
             return await UpdateAsync(user).WithCurrentCulture();
         }
@@ -269,7 +269,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupAsync(this.HostId, userId, groupName, global);
+            return await AddToRoleGroupAsync(this.CurrentHostId, userId, groupName, global);
         }
 
         /// <summary>
@@ -314,7 +314,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupsAsync(this.HostId, userId, groupNames);
+            return await AddToRoleGroupsAsync(this.CurrentHostId, userId, groupNames);
         }
 
         /// <summary>
@@ -361,7 +361,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupAsync(this.HostId, userId, groupId, global);
+            return await AddToRoleGroupAsync(this.CurrentHostId, userId, groupId, global);
         }
 
         /// <summary>
@@ -406,7 +406,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupsAsync(this.HostId, userId, groupIds);
+            return await AddToRoleGroupsAsync(this.CurrentHostId, userId, groupIds);
         }
 
         /// <summary>
@@ -452,7 +452,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupAsync(this.HostId, userId, group);
+            return await AddToRoleGroupAsync(this.CurrentHostId, userId, group);
         }
 
         /// <summary>
@@ -496,7 +496,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleGroupsAsync(this.HostId, userId, groups);
+            return await AddToRoleGroupsAsync(this.CurrentHostId, userId, groups);
         }
 
         /// <summary>
@@ -542,7 +542,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleAsync(this.HostId, userId, roleName);
+            return await AddToRoleAsync(this.CurrentHostId, userId, roleName);
         }
 
         /// <summary>
@@ -559,7 +559,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleAsync(this.HostId, userId, roleName, global);
+            return await AddToRoleAsync(this.CurrentHostId, userId, roleName, global);
         }
 
         /// <summary>
@@ -604,7 +604,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRoleAsync(this.HostId, userId, roleId, global);
+            return await AddToRoleAsync(this.CurrentHostId, userId, roleId, global);
         }
 
         /// <summary>
@@ -649,7 +649,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRolesAsync(this.HostId, userId, roleNames);
+            return await AddToRolesAsync(this.CurrentHostId, userId, roleNames);
         }
 
         /// <summary>
@@ -695,7 +695,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await AddToRolesAsync(this.HostId, userId, roleIds);
+            return await AddToRolesAsync(this.CurrentHostId, userId, roleIds);
         }
 
         /// <summary>
@@ -741,7 +741,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (user.HostId.Equals(default(TKey)))
             {
-                user.HostId = this.HostId;
+                user.HostId = this.CurrentHostId;
             }
 
             if (user.IsGlobal && !user.HostId.Equals(this.SystemHostId))
@@ -775,7 +775,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (user.HostId.Equals(default(TKey)))
             {
-                user.HostId = this.HostId;
+                user.HostId = this.CurrentHostId;
             }
 
             if (user.IsGlobal && !user.HostId.Equals(this.SystemHostId))
@@ -835,7 +835,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindAsync(this.HostId, login);
+            return await FindAsync(this.CurrentHostId, login);
         }
 
         /// <summary>
@@ -878,7 +878,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindByEmailAsync(this.HostId, email);
+            return await FindByEmailAsync(this.CurrentHostId, email);
         }
 
         /// <summary>
@@ -933,7 +933,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindByNameAsync(this.HostId, userName);
+            return await FindByNameAsync(this.CurrentHostId, userName);
         }
 
         /// <summary>
@@ -978,7 +978,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindAsync(this.HostId, userName, password);
+            return await FindAsync(this.CurrentHostId, userName, password);
         }
 
         /// <summary>
@@ -1034,7 +1034,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await GetClaimsAsync(this.HostId, userId);
+            return await GetClaimsAsync(this.CurrentHostId, userId);
         }
 
         /// <summary>
@@ -1089,7 +1089,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
 
-            return await GetLoginsAsync(this.HostId, userId);
+            return await GetLoginsAsync(this.CurrentHostId, userId);
         }
 
         /// <summary>
@@ -1146,7 +1146,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await GetRolesAsync(this.HostId, userId);
+            return await GetRolesAsync(this.CurrentHostId, userId);
         }
 
         /// <summary>
@@ -1223,7 +1223,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await IsInRoleAsync(this.HostId, userId, roleName);
+            return await IsInRoleAsync(this.CurrentHostId, userId, roleName);
         }
 
         /// <summary>
@@ -1265,7 +1265,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await IsInRoleAsync(this.HostId, userId, roleId);
+            return await IsInRoleAsync(this.CurrentHostId, userId, roleId);
         }
 
         /// <summary>
@@ -1314,7 +1314,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveClaimAsync(this.HostId, userId, claim);
+            return await RemoveClaimAsync(this.CurrentHostId, userId, claim);
         }
 
         /// <summary>
@@ -1355,7 +1355,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleGroupAsync(this.HostId, userId, groupName);
+            return await RemoveFromRoleGroupAsync(this.CurrentHostId, userId, groupName);
         }
 
         /// <summary>
@@ -1397,7 +1397,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleGroupsAsync(this.HostId, userId, groupNames);
+            return await RemoveFromRoleGroupsAsync(this.CurrentHostId, userId, groupNames);
         }
 
         /// <summary>
@@ -1443,7 +1443,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleGroupAsync(this.HostId, userId, groupId);
+            return await RemoveFromRoleGroupAsync(this.CurrentHostId, userId, groupId);
         }
 
         /// <summary>
@@ -1492,7 +1492,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleGroupsAsync(this.HostId, userId, groupIds);
+            return await RemoveFromRoleGroupsAsync(this.CurrentHostId, userId, groupIds);
         }
 
         /// <summary>
@@ -1543,7 +1543,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleAsync(this.HostId, userId, roleName);
+            return await RemoveFromRoleAsync(this.CurrentHostId, userId, roleName);
         }
 
         /// <summary>
@@ -1587,7 +1587,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRolesAsync(this.HostId, userId, roleNames);
+            return await RemoveFromRolesAsync(this.CurrentHostId, userId, roleNames);
         }
 
         /// <summary>
@@ -1635,7 +1635,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRoleAsync(this.HostId, userId, roleId);
+            return await RemoveFromRoleAsync(this.CurrentHostId, userId, roleId);
         }
 
         /// <summary>
@@ -1685,7 +1685,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RemoveFromRolesAsync(this.HostId, userId, roleIds);
+            return await RemoveFromRolesAsync(this.CurrentHostId, userId, roleIds);
         }
 
         /// <summary>
@@ -1735,7 +1735,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
             //x Contract.Requires<ArgumentNullException>(login != null, "login");
 
-            return await RemoveLoginAsync(this.HostId, userId, login);
+            return await RemoveLoginAsync(this.CurrentHostId, userId, login);
         }
 
         /// <summary>

@@ -121,7 +121,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             Contract.Requires<ArgumentNullException>(context != null, "context");
 
             this.HyperContext = context;
-            this.AutoSaveChanges = true;
+            this.AutoSaveChanges = false;
 
             this.hosts = HyperContext.Set<THost>();
             this.hostDomains = HyperContext.Set<THostDomain>();

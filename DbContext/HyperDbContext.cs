@@ -14,6 +14,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Collections;
 using System.Reflection;
 using HyperSlackers.AspNet.Identity.EntityFramework.Core;
+using System.Data.Entity.Validation;
 
 namespace HyperSlackers.AspNet.Identity.EntityFramework
 {
@@ -157,6 +158,25 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
 
+        }
+
+        /// <summary>
+        /// Saves all changes made in this context to the underlying database.
+        /// </summary>
+        /// <returns>
+        /// The number of objects written to the underlying database.
+        /// </returns>
+        public override int SaveChanges()
+        {
+            try
+            {
+                return base.SaveChanges();
+            }
+            catch (DbEntityValidationException e)
+            {
+                // lets throw a more helpful exception
+                throw new FormattedDbEntityValidationException(e);
+            }
         }
     }
 }

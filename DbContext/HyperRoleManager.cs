@@ -99,7 +99,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperRoleStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperRoleStore.SystemHostId; } }
-        public TKey HostId { get { return HyperRoleStore.CurrentHostId; } }
+        public TKey CurrentHostId { get { return HyperRoleStore.CurrentHostId; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HyperRoleManager{TKey, TRole}" /> class.
@@ -139,7 +139,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         {
             ThrowIfDisposed();
 
-            return HyperRoleStore.GetRoles(this.HostId);
+            return HyperRoleStore.GetRoles(this.CurrentHostId);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
             else
             {
-                return await CreateAsync(this.HostId, roleName, global);
+                return await CreateAsync(this.CurrentHostId, roleName, global);
             }
         }
 
@@ -216,7 +216,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (role.HostId.Equals(default(TKey)))
             {
-                role.HostId = this.HostId;
+                role.HostId = this.CurrentHostId;
             }
 
             if (role.IsGlobal && !role.HostId.Equals(this.SystemHostId))
@@ -246,7 +246,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await FindByNameAsync(this.HostId, roleName);
+            return await FindByNameAsync(this.CurrentHostId, roleName);
         }
 
         /// <summary>
@@ -276,7 +276,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             ThrowIfDisposed();
 
-            return await RoleExistsAsync(this.HostId, roleName);
+            return await RoleExistsAsync(this.CurrentHostId, roleName);
         }
 
         /// <summary>

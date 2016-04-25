@@ -102,7 +102,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public bool MultiHostEnabled { get { return HyperRoleGroupStore.MultiHostEnabled; } }
         public TKey SystemHostId { get { return HyperRoleGroupStore.SystemHostId; } }
-        public TKey HostId { get { return HyperRoleGroupStore.CurrentHostId; } }
+        public TKey CurrentHostId { get { return HyperRoleGroupStore.CurrentHostId; } }
         public bool RoleGroupsEnabled { get { return HyperRoleGroupStore.RoleGroupsEnabled; } }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
             else
             {
-                return await CreateAsync(this.HostId, groupName, global);
+                return await CreateAsync(this.CurrentHostId, groupName, global);
             }
         }
 
@@ -228,7 +228,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             if (group.HostId.Equals(default(TKey)))
             {
-                group.HostId = this.HostId;
+                group.HostId = this.CurrentHostId;
             }
 
             if (group.IsGlobal && !group.HostId.Equals(this.SystemHostId))
@@ -322,7 +322,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             ThrowIfDisabled();
             ThrowIfDisposed();
 
-            return await FindByNameAsync(this.HostId, groupName);
+            return await FindByNameAsync(this.CurrentHostId, groupName);
         }
 
         /// <summary>

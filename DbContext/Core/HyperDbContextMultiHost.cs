@@ -296,13 +296,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             // UserName is required
             if (user.UserName.IsNullOrWhiteSpace())
             {
-                errors.Add(new DbValidationError("User", "UserName required."));
+                errors.Add(new DbValidationError("UserName", "UserName required."));
             }
 
             // email is required
             if (user.Email.IsNullOrWhiteSpace())
             {
-                errors.Add(new DbValidationError("User", "Email address is required."));
+                errors.Add(new DbValidationError("Email", "Email address is required."));
             }
 
             // email must be valid
@@ -312,7 +312,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             }
             catch (FormatException)
             {
-                errors.Add(new DbValidationError("User", "Email address is invalid."));
+                errors.Add(new DbValidationError("Email", "Email address is invalid."));
             }
 
             // check ig global user tied to system host
@@ -320,7 +320,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             {
                 if (!user.HostId.Equals(this.SystemHostId))
                 {
-                    errors.Add(new DbValidationError("User", "Global users must belong to system host."));
+                    errors.Add(new DbValidationError("UserName", "Global users must belong to system host."));
                 }
             }
 
@@ -334,7 +334,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(new DbValidationError("User", String.Format("UserName '{0}' already exists in system.", user.UserName)));
+                    errors.Add(new DbValidationError("UserNAme", String.Format("UserName '{0}' already exists in system.", user.UserName)));
                 }
             }
             else
@@ -347,7 +347,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingHostUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(new DbValidationError("User", String.Format("User '{0}' already exists for host.", user.UserName)));
+                    errors.Add(new DbValidationError("UserName", String.Format("User '{0}' already exists for host.", user.UserName)));
                 }
 
                 // user cannot exist as global
@@ -355,7 +355,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingGlobalUsers.Any(u => !u.Id.Equals(userId)))
                 {
-                    errors.Add(new DbValidationError("User", String.Format("User '{0}' already exists as global user.", user.UserName)));
+                    errors.Add(new DbValidationError("UserName", String.Format("User '{0}' already exists as global user.", user.UserName)));
                 }
             }
 
@@ -371,7 +371,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             // role name is required
             if (string.IsNullOrWhiteSpace(role.Name))
             {
-                errors.Add(new DbValidationError("Role", String.Format("Role name is required.")));
+                errors.Add(new DbValidationError("Name", String.Format("Role name is required.")));
             }
 
             // check if global role tied to system host
@@ -379,7 +379,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             {
                 if (!role.HostId.Equals(this.SystemHostId))
                 {
-                    errors.Add(new DbValidationError("Role", "Global roles must belong to system host."));
+                    errors.Add(new DbValidationError("Name", "Global roles must belong to system host."));
                 }
             }
 
@@ -393,7 +393,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingRoles.Any(r => !r.Id.Equals(roleId)))
                 {
-                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists.", role.Name)));
+                    errors.Add(new DbValidationError("Name", String.Format("Role '{0}' already exists.", role.Name)));
                 }
             }
             else
@@ -406,7 +406,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingHostRoles.Any(r => !r.Id.Equals(roleId)))
                 {
-                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists for host.", roleName)));
+                    errors.Add(new DbValidationError("Name", String.Format("Role '{0}' already exists for host.", roleName)));
                 }
 
                 // role cannot exist as global
@@ -414,7 +414,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingGlobalRoles.Any(r => !r.Id.Equals(roleId)))
                 {
-                    errors.Add(new DbValidationError("Role", String.Format("Role '{0}' already exists as global role.", roleName)));
+                    errors.Add(new DbValidationError("Name", String.Format("Role '{0}' already exists as global role.", roleName)));
                 }
             }
 

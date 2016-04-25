@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Linq;
 using HyperSlackers.AspNet.Identity.EntityFramework;
 using HyperSlackers.DbContext.Demo.Entities;
 using System.Data.Entity.ModelConfiguration.Conventions;
@@ -30,6 +31,11 @@ namespace HyperSlackers.DbContext.Demo.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+        }
+
+        public ApplicationUser()
+        {
+            this.Id = Guid.NewGuid();
         }
     }
 
@@ -62,6 +68,23 @@ namespace HyperSlackers.DbContext.Demo.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+
+        public override ApplicationUser AnonymousUser
+        {
+            get
+            {
+                if (base.AnonymousUser == null)
+                {
+                    base.AnonymousUser = this.Users.SingleOrDefault(u => u.UserName == "anonymous");
+                }
+
+                return base.AnonymousUser;
+            }
+            protected set
+            {
+                base.AnonymousUser = value;
+            }
         }
 
         // DRM Added

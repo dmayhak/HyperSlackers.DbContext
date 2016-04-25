@@ -237,6 +237,7 @@
     <Compile Include="Attributes\CascadeDeleteAttributeConvention.cs" />
     <Compile Include="Attributes\ChildAttribute.cs" />
     <Compile Include="Attributes\ConvertNullToEmptyStringAttribute.cs" />
+    <Compile Include="Core\FormattedDbEntityValidationException.cs" />
     <Compile Include="Core\HyperDbContextAuditing.cs" />
     <Compile Include="Core\HyperDbContextMultiHost.cs" />
     <Compile Include="Core\HyperDbContextGroups.cs" />

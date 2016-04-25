@@ -13,7 +13,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201510240413171_InitialCreate"; }
+            get { return "201604221625196_InitialCreate"; }
         }
         
         string IMigrationMetadata.Source

@@ -153,7 +153,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             // group name is required
             if (string.IsNullOrWhiteSpace(group.Name))
             {
-                errors.Add(new DbValidationError("RoleGroup", String.Format("Group name is required.")));
+                errors.Add(new DbValidationError("Name", String.Format("Group name is required.")));
             }
 
             // check if global group tied to system host
@@ -161,7 +161,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             {
                 if (!group.HostId.Equals(this.SystemHostId))
                 {
-                    errors.Add(new DbValidationError("RoleGroup", "Global RoleGroups must belong to system host."));
+                    errors.Add(new DbValidationError("Name", "Global RoleGroups must belong to system host."));
                 }
             }
 
@@ -175,7 +175,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingGroups.Any(g => !g.Id.Equals(groupId)))
                 {
-                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists.", group.Name)));
+                    errors.Add(new DbValidationError("Name", String.Format("Group '{0}' already exists.", group.Name)));
                 }
             }
             else
@@ -188,7 +188,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingHostGroups.Any(g => !g.Id.Equals(groupId)))
                 {
-                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists for host.", groupName)));
+                    errors.Add(new DbValidationError("Name", String.Format("Group '{0}' already exists for host.", groupName)));
                 }
 
                 // group cannot exist as global
@@ -196,7 +196,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
                 if (existingGlobalGroups.Any(g => !g.Id.Equals(groupId)))
                 {
-                    errors.Add(new DbValidationError("RoleGroup", String.Format("Group '{0}' already exists as global group.", groupName)));
+                    errors.Add(new DbValidationError("Name", String.Format("Group '{0}' already exists as global group.", groupName)));
                 }
             }
 

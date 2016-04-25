@@ -134,7 +134,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUser()
         {
         }
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="IdentityUserMultiHost{TKey}"/> class.
         /// </summary>

@@ -29,5 +29,13 @@ namespace HyperSlackers.DbContext.Demo
             var hosts = context.Hosts.ToList();
             //context.AuditingEnabled = auditingEnabled;
         }
+
+        protected void Application_AuthenticateRequest(Object sender, EventArgs e)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                //here we can subscribe user to a role via Roles.AddUserToRole()
+            }
+        }
     }
 }

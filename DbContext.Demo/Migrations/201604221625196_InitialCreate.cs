@@ -144,16 +144,16 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                     {
                         Id = c.Guid(nullable: false),
                         ClusteredKey = c.Long(nullable: false, identity: true),
-                        GroupId = c.Guid(nullable: false),
+                        RoleGroupId = c.Guid(nullable: false),
                         RoleId = c.Guid(nullable: false),
-                        HyperGroupGuid_Id = c.Guid(),
+                        HyperRoleGroupGuid_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetGroups", t => t.HyperGroupGuid_Id)
+                .ForeignKey("dbo.AspNetGroups", t => t.HyperRoleGroupGuid_Id)
                 .Index(t => t.ClusteredKey, clustered: true)
-                .Index(t => new { t.GroupId, t.RoleId }, unique: true, name: "IX_Group_Role")
-                .Index(t => new { t.RoleId, t.GroupId }, unique: true, name: "IX_Role_Group")
-                .Index(t => t.HyperGroupGuid_Id);
+                .Index(t => new { t.RoleGroupId, t.RoleId }, unique: true, name: "IX_Group_Role")
+                .Index(t => new { t.RoleId, t.RoleGroupId }, unique: true, name: "IX_Role_Group")
+                .Index(t => t.HyperRoleGroupGuid_Id);
             
             CreateTable(
                 "dbo.AspNetGroups",
@@ -179,19 +179,19 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                         Id = c.Guid(nullable: false),
                         ClusteredKey = c.Long(nullable: false, identity: true),
                         HostId = c.Guid(nullable: false),
-                        GroupId = c.Guid(nullable: false),
+                        RoleGroupId = c.Guid(nullable: false),
                         UserId = c.Guid(nullable: false),
                         IsGlobal = c.Boolean(nullable: false),
-                        HyperGroupGuid_Id = c.Guid(),
+                        HyperRoleGroupGuid_Id = c.Guid(),
                         ApplicationUser_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.AspNetGroups", t => t.HyperGroupGuid_Id)
+                .ForeignKey("dbo.AspNetGroups", t => t.HyperRoleGroupGuid_Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUser_Id)
                 .Index(t => t.ClusteredKey, clustered: true)
-                .Index(t => new { t.GroupId, t.UserId, t.HostId, t.IsGlobal }, name: "IX_Group_User_Host_Global")
-                .Index(t => new { t.UserId, t.GroupId, t.HostId, t.IsGlobal }, name: "IX_User_Group_Host_Global")
-                .Index(t => t.HyperGroupGuid_Id)
+                .Index(t => new { t.RoleGroupId, t.UserId, t.HostId, t.IsGlobal }, name: "IX_Group_User_Host_Global")
+                .Index(t => new { t.UserId, t.RoleGroupId, t.HostId, t.IsGlobal }, name: "IX_User_Group_Host_Global")
+                .Index(t => t.HyperRoleGroupGuid_Id)
                 .Index(t => t.ApplicationUser_Id);
             
             CreateTable(
@@ -203,6 +203,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                         HostId = c.Guid(nullable: false),
                         IsGlobal = c.Boolean(nullable: false),
                         IsGlobalOnly = c.Boolean(nullable: false),
+                        Sequence = c.Int(nullable: false),
                         Name = c.String(nullable: false, maxLength: 256),
                     })
                 .PrimaryKey(t => t.Id)
@@ -218,7 +219,7 @@ namespace HyperSlackers.DbContext.Demo.Migrations
                         RoleId = c.Guid(nullable: false),
                         HostId = c.Guid(nullable: false),
                         ClusteredKey = c.Long(nullable: false, identity: true),
-                        GroupId = c.Guid(),
+                        RoleGroupId = c.Guid(),
                         IsGlobal = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => new { t.UserId, t.RoleId, t.HostId })
@@ -299,12 +300,12 @@ namespace HyperSlackers.DbContext.Demo.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetGroupUsers", "ApplicationUser_Id", "dbo.AspNetUsers");
+            DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.AspNetGroupUsers", "HyperGroupGuid_Id", "dbo.AspNetGroups");
-            DropForeignKey("dbo.AspNetGroupRoles", "HyperGroupGuid_Id", "dbo.AspNetGroups");
+            DropForeignKey("dbo.AspNetGroupUsers", "HyperRoleGroupGuid_Id", "dbo.AspNetGroups");
+            DropForeignKey("dbo.AspNetGroupRoles", "HyperRoleGroupGuid_Id", "dbo.AspNetGroups");
             DropForeignKey("dbo.InvoiceItems", "ProductId", "dbo.Products");
             DropForeignKey("dbo.InvoiceItems", "InvoiceId", "dbo.Invoices");
             DropForeignKey("dbo.AspNetHostDomains", "HostId", "dbo.AspNetHosts");
@@ -327,14 +328,14 @@ namespace HyperSlackers.DbContext.Demo.Migrations
             DropIndex("dbo.AspNetRoles", "IX_Host_Name");
             DropIndex("dbo.AspNetRoles", new[] { "ClusteredKey" });
             DropIndex("dbo.AspNetGroupUsers", new[] { "ApplicationUser_Id" });
-            DropIndex("dbo.AspNetGroupUsers", new[] { "HyperGroupGuid_Id" });
+            DropIndex("dbo.AspNetGroupUsers", new[] { "HyperRoleGroupGuid_Id" });
             DropIndex("dbo.AspNetGroupUsers", "IX_User_Group_Host_Global");
             DropIndex("dbo.AspNetGroupUsers", "IX_Group_User_Host_Global");
             DropIndex("dbo.AspNetGroupUsers", new[] { "ClusteredKey" });
             DropIndex("dbo.AspNetGroups", "IX_Global_Name");
             DropIndex("dbo.AspNetGroups", "IX_Host_Name");
             DropIndex("dbo.AspNetGroups", new[] { "ClusteredKey" });
-            DropIndex("dbo.AspNetGroupRoles", new[] { "HyperGroupGuid_Id" });
+            DropIndex("dbo.AspNetGroupRoles", new[] { "HyperRoleGroupGuid_Id" });
             DropIndex("dbo.AspNetGroupRoles", "IX_Role_Group");
             DropIndex("dbo.AspNetGroupRoles", "IX_Group_Role");
             DropIndex("dbo.AspNetGroupRoles", new[] { "ClusteredKey" });

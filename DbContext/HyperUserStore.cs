@@ -133,6 +133,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             Contract.Requires<ArgumentNullException>(context != null, "context");
 
             this.HyperContext = context;
+            this.AutoSaveChanges = false;
 
             this.roles = Context.Set<TRole>();
             this.groups = Context.Set<TRoleGroup>();
@@ -887,6 +888,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TKey hostId, TUser user)
         {
+            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
             Contract.Requires<ArgumentNullException>(user != null, "user");
 
             ThrowIfDisposed();

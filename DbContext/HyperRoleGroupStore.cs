@@ -121,7 +121,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             Contract.Requires<ArgumentNullException>(context != null, "context");
 
             this.HyperContext = context;
-            this.AutoSaveChanges = true;
+            this.AutoSaveChanges = false;
             this.RoleGroupsEnabled = context.RoleGroupsEnabled;
 
             this.groups = HyperContext.Set<TRoleGroup>();
