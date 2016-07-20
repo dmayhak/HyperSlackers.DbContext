@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,7 +22,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleValidatorGuid(HyperRoleManagerGuid<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -40,7 +40,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleValidatorInt(HyperRoleManagerInt<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -58,7 +58,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleValidatorLong(HyperRoleManagerLong<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -101,7 +101,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleValidator(HyperRoleManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
 
             Manager = manager;
         }
@@ -113,7 +113,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> ValidateAsync(TRole role)
         {
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(role != null, "role");
 
             var errors = new List<string>();
 

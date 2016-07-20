@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupManagerGuid(HyperRoleGroupStoreGuid<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -42,7 +42,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupManagerInt(HyperRoleGroupStoreInt<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -60,7 +60,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupManagerLong(HyperRoleGroupStoreLong<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -111,7 +111,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="store">The <c>RoleStore</c>.</param>
         public HyperRoleGroupManager(HyperRoleGroupStore<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.HyperRoleGroupStore = store;
         }
@@ -175,7 +175,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global groups must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(string groupName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -199,8 +199,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global groups must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(TKey hostId, string groupName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -221,7 +221,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> CreateAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -255,7 +255,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task DeleteAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -270,7 +270,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task UpdateAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -302,7 +302,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByIdAsync(TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !groupId.Equals(default(TKey)));
+            Helpers.ThrowIfNull(!MultiHostEnabled || !groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -317,7 +317,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByNameAsync(string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -333,7 +333,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByNameAsync(TKey hostId, string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -348,7 +348,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<IList<TRole>> GetRolesAsync(TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -370,7 +370,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<IList<TUser>> GetUsersAsync(TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -393,8 +393,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task AddRoleAsync(TRoleGroup group, TRole role)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -410,8 +410,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task RemoveRoleAsync(TRoleGroup group, TRole role)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisabled();
             ThrowIfDisposed();

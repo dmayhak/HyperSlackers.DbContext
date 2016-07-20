@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
-using System.Diagnostics.Contracts;
+
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -336,7 +336,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         protected HyperDbContextBase(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

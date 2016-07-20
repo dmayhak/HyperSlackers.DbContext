@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -100,7 +100,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="name">The role name.</param>
         public HyperRole(string name)
         {
-            Contract.Requires<ArgumentNullException>(!name.IsNullOrWhiteSpace(), "name");
+            Helpers.ThrowIfNull(!name.IsNullOrWhiteSpace(), "name");
 
             this.Name = name;
         }
@@ -112,8 +112,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="hostId">The host id.</param>
         public HyperRole(string name, TKey hostId)
         {
-            Contract.Requires<ArgumentNullException>(!name.IsNullOrWhiteSpace(), "name");
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!name.IsNullOrWhiteSpace(), "name");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
 
             this.Name = name;
             this.HostId = hostId;

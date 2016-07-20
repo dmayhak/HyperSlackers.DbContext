@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
-using System.Diagnostics.Contracts;
+
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -88,7 +88,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         protected HyperDbContextRoleGroups(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
 
             this.MultiHostEnabled = false;
         }
@@ -146,7 +146,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
         private List<DbValidationError> ValidateRoleGroup(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             var errors = new List<DbValidationError>();
 

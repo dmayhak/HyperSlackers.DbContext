@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupStoreGuid(HyperDbContextGuid<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -41,7 +41,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupStoreInt(HyperDbContextInt<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -59,7 +59,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleGroupStoreLong(HyperDbContextLong<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -118,7 +118,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="context">The context.</param>
         public HyperRoleGroupStore(HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
 
             this.HyperContext = context;
             this.AutoSaveChanges = false;
@@ -186,7 +186,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global groups must belong to system host.</exception>
         public virtual async Task CreateAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -215,7 +215,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task DeleteAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -234,7 +234,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task UpdateAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -255,7 +255,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByIdAsync(TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)));
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -270,7 +270,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByNameAsync(string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -286,8 +286,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRoleGroup> FindByNameAsync(TKey hostId, string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)));
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -302,7 +302,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<IList<TRole>> GetRolesAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -321,7 +321,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<IList<TUser>> GetUsersAsync(TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -342,8 +342,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException"></exception>
         public virtual async Task AddRoleAsync(TRoleGroup group, TRole role)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisabled();
             ThrowIfDisposed();
@@ -380,8 +380,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         public virtual async Task RemoveRoleAsync(TRoleGroup group, TRole role)
         {
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisabled();
             ThrowIfDisposed();

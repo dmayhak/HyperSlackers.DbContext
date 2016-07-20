@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +23,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleManagerGuid(HyperRoleStoreGuid<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -40,7 +40,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleManagerInt(HyperRoleStoreInt<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -57,7 +57,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleManagerLong(HyperRoleStoreLong<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -108,7 +108,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleManager(HyperRoleStore<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             // new role validator to allow duplicate names--just not for same host
             this.RoleValidator = new HyperRoleValidator<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty>(this);
@@ -123,7 +123,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public IQueryable<TRole> GetRoles(TKey hostId)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
 
             ThrowIfDisposed();
 
@@ -163,7 +163,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(string roleName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -187,8 +187,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public async Task<IdentityResult> CreateAsync(TKey hostId, string roleName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -210,7 +210,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public override async Task<IdentityResult> CreateAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisposed();
 
@@ -242,7 +242,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TRole> FindByNameAsync(string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -257,8 +257,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRole> FindByNameAsync(TKey hostId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -272,7 +272,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns><c>true</c> if role exists, otherwise, <c>false</c></returns>
         public override async Task<bool> RoleExistsAsync(string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -289,8 +289,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </returns>
         public async Task<bool> RoleExistsAsync(TKey hostId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -306,7 +306,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Roles cannot be assigned a new hostId.</exception>
         public override async Task<IdentityResult> UpdateAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisposed();
 
@@ -342,7 +342,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Roles cannot be assigned a new hostId.</exception>
         public override async Task<IdentityResult> DeleteAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisposed();
 

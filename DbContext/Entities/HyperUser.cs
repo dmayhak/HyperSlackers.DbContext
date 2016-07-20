@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,7 +32,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserGuid(string userName)
             : base(userName)
         {
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
 
             this.Id = Guid.NewGuid();
         }
@@ -57,7 +57,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserInt(string userName)
             : base(userName)
         {
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
         }
     }
 
@@ -80,7 +80,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserLong(string userName)
             : base(userName)
         {
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
         }
     }
 
@@ -141,7 +141,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="userName">The userName.</param>
         public HyperUser(string userName)
         {
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
 
             base.UserName = userName;
         }

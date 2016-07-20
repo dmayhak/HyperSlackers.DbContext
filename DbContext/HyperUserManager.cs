@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserManagerGuid(HyperUserStoreGuid<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.UserValidator = new HyperUserValidatorGuid<TUser>(this);
         }
@@ -44,7 +44,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserManagerInt(HyperUserStoreInt<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.UserValidator = new HyperUserValidatorInt<TUser>(this);
         }
@@ -64,7 +64,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserManagerLong(HyperUserStoreLong<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.UserValidator = new HyperUserValidatorLong<TUser>(this);
         }
@@ -117,9 +117,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserManager(HyperUserStore<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.HyperUserStore = store;
+            this.UserTokenProvider = HyperTokenProvider<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser>.Provider;
 
             // allow duplicate emails and funky chars
             this.UserValidator = new UserValidator<TUser, TKey>(this) { AllowOnlyAlphanumericUserNames = false, RequireUniqueEmail = false };
@@ -158,8 +159,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> AddClaimAsync(TKey userId, System.Security.Claims.Claim claim)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(claim != null, "claim");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(claim != null, "claim");
 
             ThrowIfDisposed();
 
@@ -175,9 +176,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddClaimAsync(TKey hostId, TKey userId, Claim claim)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(claim != null, "claim");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(claim != null, "claim");
 
             ThrowIfDisposed();
 
@@ -200,8 +201,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> AddLoginAsync(TKey userId, UserLoginInfo login)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(login != null, "login");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -232,9 +233,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddLoginAsync(TKey hostId, TKey userId, UserLoginInfo login)
         {
-            //x Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(login != null, "login");
+            //x Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -264,8 +265,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey userId, string groupName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -283,9 +284,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey hostId, TKey userId, string groupName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -309,8 +310,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey userId, params string[] groupNames)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupNames != null, "groupNames");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupNames != null, "groupNames");
 
             ThrowIfDisposed();
 
@@ -327,9 +328,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey hostId, TKey userId, params string[] groupNames)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupNames != null, "groupNames");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupNames != null, "groupNames");
 
             ThrowIfDisposed();
 
@@ -356,8 +357,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey userId, TKey groupId, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisposed();
 
@@ -375,9 +376,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey hostId, TKey userId, TKey groupId, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisposed();
 
@@ -401,8 +402,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey userId, params TKey[] groupIds)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupIds != null, "groupIds");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupIds != null, "groupIds");
 
             ThrowIfDisposed();
 
@@ -419,9 +420,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey hostId, TKey userId, params TKey[] groupIds)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupIds != null, "groupIds");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupIds != null, "groupIds");
 
             ThrowIfDisposed();
 
@@ -447,8 +448,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey userId, TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisposed();
 
@@ -465,9 +466,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupAsync(TKey hostId, TKey userId, TRoleGroup group)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(group != null, "group");
 
             ThrowIfDisposed();
 
@@ -491,8 +492,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey userId, params TRoleGroup[] groups)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groups != null, "groups");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groups != null, "groups");
 
             ThrowIfDisposed();
 
@@ -509,9 +510,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleGroupsAsync(TKey hostId, TKey userId, params TRoleGroup[] groups)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groups != null, "groups");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groups != null, "groups");
 
             ThrowIfDisposed();
 
@@ -537,8 +538,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> AddToRoleAsync(TKey userId, string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -554,8 +555,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleAsync(TKey userId, string roleName, bool global)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -573,9 +574,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleAsync(TKey hostId, TKey userId, string roleName, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -599,8 +600,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRoleAsync(TKey userId, TKey roleId, bool global = false)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -618,9 +619,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRoleAsync(TKey hostId, TKey userId, TKey roleId, bool global = false)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -644,8 +645,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> AddToRolesAsync(TKey userId, params string[] roleNames)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(roleNames != null, "roleNames");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(roleNames != null, "roleNames");
 
             ThrowIfDisposed();
 
@@ -661,9 +662,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRolesAsync(TKey hostId, TKey userId, params string[] roleNames)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(roleNames != null, "roleNames");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(roleNames != null, "roleNames");
 
             ThrowIfDisposed();
 
@@ -690,8 +691,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> AddToRolesAsync(TKey userId, params TKey[] roleIds)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(roleNames != null, "roleNames");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(roleNames != null, "roleNames");
 
             ThrowIfDisposed();
 
@@ -708,9 +709,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> AddToRolesAsync(TKey hostId, TKey userId, params TKey[] roleIds)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(roleIds != null, "roleIds");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(roleIds != null, "roleIds");
 
             ThrowIfDisposed();
 
@@ -735,7 +736,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> CreateAsync(TUser user)
         {
-            //x Contract.Requires<ArgumentNullException>(user != null, "user");
+            //x Helpers.ThrowIfNull(user != null, "user");
 
             ThrowIfDisposed();
 
@@ -768,8 +769,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> CreateAsync(TUser user, string password)
         {
-            //x Contract.Requires<ArgumentNullException>(user != null, "user");
-            //x Contract.Requires<ArgumentNullException>(!password.IsNullOrWhiteSpace(), "password");
+            //x Helpers.ThrowIfNull(user != null, "user");
+            //x Helpers.ThrowIfNull(!password.IsNullOrWhiteSpace(), "password");
 
             ThrowIfDisposed();
 
@@ -799,7 +800,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> DeleteAsync(TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             var user = await FindByIdAsync(userId).WithCurrentCulture();
             if (user == null)
@@ -817,7 +818,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> DeleteAsync(TUser user)
         {
-            //x Contract.Requires<ArgumentNullException>(user != null, "user");
+            //x Helpers.ThrowIfNull(user != null, "user");
 
             await HyperUserStore.DeleteAsync(user).WithCurrentCulture();
 
@@ -831,7 +832,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TUser> FindAsync(UserLoginInfo login)
         {
-            //x Contract.Requires<ArgumentNullException>(login != null, "login");
+            //x Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -845,8 +846,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<TUser> FindAsync(TKey hostId, UserLoginInfo login)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(login != null, "login");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -860,7 +861,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<TUser>> FindAllAsync(UserLoginInfo login)
         {
-            //x Contract.Requires<ArgumentNullException>(login != null, "login");
+            //x Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -874,7 +875,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TUser> FindByEmailAsync(string email)
         {
-            //x Contract.Requires<ArgumentNullException>(!email.IsNullOrWhiteSpace(), "email");
+            //x Helpers.ThrowIfNull(!email.IsNullOrWhiteSpace(), "email");
 
             ThrowIfDisposed();
 
@@ -888,8 +889,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<TUser> FindByEmailAsync(TKey hostId, string email)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!email.IsNullOrWhiteSpace(), "email");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!email.IsNullOrWhiteSpace(), "email");
 
             ThrowIfDisposed();
 
@@ -903,7 +904,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<TUser>> FindAllByEmailAsync(string email)
         {
-            Contract.Requires<ArgumentNullException>(!email.IsNullOrWhiteSpace(), "email");
+            Helpers.ThrowIfNull(!email.IsNullOrWhiteSpace(), "email");
 
             ThrowIfDisposed();
 
@@ -917,7 +918,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TUser> FindByIdAsync(TKey userId)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             return await HyperUserStore.FindByIdAsync(userId); // does the find across all hosts
         }
@@ -929,7 +930,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TUser> FindByNameAsync(string userName)
         {
-            //x Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            //x Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
 
             ThrowIfDisposed();
 
@@ -943,8 +944,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<TUser> FindByNameAsync(TKey hostId, string userName)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
 
             ThrowIfDisposed();
 
@@ -958,7 +959,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<TUser>> FindAllByNameAsync(string userName)
         {
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
 
             ThrowIfDisposed();
 
@@ -973,8 +974,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<TUser> FindAsync(string userName, string password)
         {
-            //x Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
-            //x Contract.Requires<ArgumentNullException>(!password.IsNullOrWhiteSpace(), "password");
+            //x Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
+            //x Helpers.ThrowIfNull(!password.IsNullOrWhiteSpace(), "password");
 
             ThrowIfDisposed();
 
@@ -989,9 +990,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<TUser> FindAsync(TKey hostId, string userName, string password)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userName.IsNullOrWhiteSpace(), "userName");
-            Contract.Requires<ArgumentNullException>(!password.IsNullOrWhiteSpace(), "password");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userName.IsNullOrWhiteSpace(), "userName");
+            Helpers.ThrowIfNull(!password.IsNullOrWhiteSpace(), "password");
 
             ThrowIfDisposed();
 
@@ -1013,8 +1014,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
         {
-            //x Contract.Requires<ArgumentNullException>(user != null, "user");
-            //x Contract.Requires<ArgumentNullException>(!authenticationType.IsNullOrWhiteSpace(), "authenticationType");
+            //x Helpers.ThrowIfNull(user != null, "user");
+            //x Helpers.ThrowIfNull(!authenticationType.IsNullOrWhiteSpace(), "authenticationType");
 
             ThrowIfDisposed();
 
@@ -1030,7 +1031,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IList<Claim>> GetClaimsAsync(TKey userId)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1046,8 +1047,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IList<Claim>> GetClaimsAsync(TKey hostId, TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1067,7 +1068,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<Claim>> GetAllClaimsAsync(TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1087,7 +1088,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IList<UserLoginInfo>> GetLoginsAsync(TKey userId)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             return await GetLoginsAsync(this.CurrentHostId, userId);
         }
@@ -1100,8 +1101,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<UserLoginInfo>> GetLoginsAsync(TKey hostId, TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1122,7 +1123,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IList<UserLoginInfo>> GetAllLoginsAsync(TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1142,7 +1143,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IList<string>> GetRolesAsync(TKey userId)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1156,8 +1157,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<string>> GetRolesAsync(TKey hostId, TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1177,7 +1178,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<TRole>> GetAllRolesAsync(TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1197,7 +1198,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IList<TUserRole>> GetAllUserRolesAsync(TKey userId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
 
             ThrowIfDisposed();
 
@@ -1218,8 +1219,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<bool> IsInRoleAsync(TKey userId, string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -1237,9 +1238,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </returns>
         public virtual async Task<bool> IsInRoleAsync(TKey hostId, TKey userId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -1260,8 +1261,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<bool> IsInRoleAsync(TKey userId, TKey roleId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -1280,9 +1281,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<bool> IsInRoleAsync(TKey hostId, TKey userId, TKey roleId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -1309,8 +1310,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> RemoveClaimAsync(TKey userId, Claim claim)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(claim != null, "claim");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(claim != null, "claim");
 
             ThrowIfDisposed();
 
@@ -1326,8 +1327,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveClaimAsync(TKey hostId, TKey userId, Claim claim)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(claim != null, "claim");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(claim != null, "claim");
 
             ThrowIfDisposed();
 
@@ -1350,8 +1351,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupAsync(TKey userId, string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -1367,9 +1368,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupAsync(TKey hostId, TKey userId, string groupName)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             ThrowIfDisposed();
 
@@ -1392,8 +1393,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupsAsync(TKey userId, params string[] groupNames)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupNames != null, "groupNames");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupNames != null, "groupNames");
 
             ThrowIfDisposed();
 
@@ -1410,9 +1411,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupsAsync(TKey hostId, TKey userId, params string[] groupNames)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupNames != null, "groupNames");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupNames != null, "groupNames");
 
             ThrowIfDisposed();
 
@@ -1438,8 +1439,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupAsync(TKey userId, TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisposed();
 
@@ -1456,9 +1457,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupAsync(TKey hostId, TKey userId, TKey groupId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             ThrowIfDisposed();
 
@@ -1487,8 +1488,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupsAsync(TKey userId, params TKey[] groupIds)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupIds != null, "groupIds");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupIds != null, "groupIds");
 
             ThrowIfDisposed();
 
@@ -1505,9 +1506,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> RemoveFromRoleGroupsAsync(TKey hostId, TKey userId, params TKey[] groupIds)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(groupIds != null, "groupIds");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(groupIds != null, "groupIds");
 
             ThrowIfDisposed();
 
@@ -1538,8 +1539,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> RemoveFromRoleAsync(TKey userId, string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -1556,9 +1557,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleAsync(TKey hostId, TKey userId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -1582,8 +1583,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> RemoveFromRolesAsync(TKey userId, params string[] roleNames)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(roles != null, "roles");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(roles != null, "roles");
 
             ThrowIfDisposed();
 
@@ -1601,9 +1602,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> RemoveFromRolesAsync(TKey hostId, TKey userId, params string[] roleNames)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(roleNames != null, "roleNames");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(roleNames != null, "roleNames");
 
             ThrowIfDisposed();
 
@@ -1630,8 +1631,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleAsync(TKey userId, TKey roleId)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -1648,9 +1649,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRoleAsync(TKey hostId, TKey userId, TKey roleId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(!roleId.Equals(default(TKey)), "roleId");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(!roleId.Equals(default(TKey)), "roleId");
 
             ThrowIfDisposed();
 
@@ -1680,8 +1681,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveFromRolesAsync(TKey userId, params TKey[] roleIds)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(roles != null, "roles");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(roles != null, "roles");
 
             ThrowIfDisposed();
 
@@ -1699,9 +1700,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.InvalidOperationException"></exception>
         public virtual async Task<IdentityResult> RemoveFromRolesAsync(TKey hostId, TKey userId, params TKey[] roleIds)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(roleIds != null, "roleIds");
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(roleIds != null, "roleIds");
 
             ThrowIfDisposed();
 
@@ -1732,8 +1733,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> RemoveLoginAsync(TKey userId, UserLoginInfo login)
         {
-            //x Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            //x Contract.Requires<ArgumentNullException>(login != null, "login");
+            //x Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            //x Helpers.ThrowIfNull(login != null, "login");
 
             return await RemoveLoginAsync(this.CurrentHostId, userId, login);
         }
@@ -1747,8 +1748,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task<IdentityResult> RemoveLoginAsync(TKey hostId, TKey userId, UserLoginInfo login)
         {
-            Contract.Requires<ArgumentNullException>(!userId.Equals(default(TKey)), "userId");
-            Contract.Requires<ArgumentNullException>(login != null, "login");
+            Helpers.ThrowIfNull(!userId.Equals(default(TKey)), "userId");
+            Helpers.ThrowIfNull(login != null, "login");
 
             ThrowIfDisposed();
 
@@ -1776,7 +1777,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// </exception>
         public override async Task<IdentityResult> UpdateAsync(TUser user)
         {
-            //x Contract.Requires<ArgumentNullException>(user != null, "user");
+            //x Helpers.ThrowIfNull(user != null, "user");
 
             ThrowIfDisposed();
 

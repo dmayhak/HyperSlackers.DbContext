@@ -3,7 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,7 +24,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleStoreGuid(HyperDbContextGuid<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -41,7 +41,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleStoreInt(HyperDbContextInt<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -58,7 +58,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleStoreLong(HyperDbContextLong<TUser> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
         }
     }
 
@@ -110,7 +110,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperRoleStore(HyperDbContext<THost, THostDomain, TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> context)
             : base(context)
         {
-            Contract.Requires<ArgumentNullException>(context != null, "context");
+            Helpers.ThrowIfNull(context != null, "context");
 
             this.HyperContext = context;
         }
@@ -133,7 +133,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public IQueryable<TRole> GetRoles(TKey hostId)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
 
             ThrowIfDisposed();
 
@@ -159,7 +159,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public override async Task CreateAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisposed();
 
@@ -183,7 +183,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public new async Task<TRole> FindByNameAsync(string roleName)
         {
-            //x Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            //x Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -198,8 +198,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<TRole> FindByNameAsync(TKey hostId, string roleName)
         {
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!roleName.IsNullOrWhiteSpace(), "roleName");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!roleName.IsNullOrWhiteSpace(), "roleName");
 
             ThrowIfDisposed();
 
@@ -215,7 +215,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException">Global roles must belong to system host.</exception>
         public override async Task UpdateAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             ThrowIfDisposed();
 
@@ -240,7 +240,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="role"></param>
         public override Task DeleteAsync(TRole role)
         {
-            //x Contract.Requires<ArgumentNullException>(role != null, "role");
+            //x Helpers.ThrowIfNull(role != null, "role");
 
             return base.DeleteAsync(role);
         }

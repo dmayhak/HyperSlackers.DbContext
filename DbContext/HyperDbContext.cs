@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
-using System.Diagnostics.Contracts;
+
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -43,7 +43,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         protected HyperDbContextGuid(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
         }
     }
 
@@ -72,7 +72,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         protected HyperDbContextInt(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
         }
     }
 
@@ -101,7 +101,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         protected HyperDbContextLong(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
         }
     }
 
@@ -156,7 +156,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         protected HyperDbContext(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
 
         }
 

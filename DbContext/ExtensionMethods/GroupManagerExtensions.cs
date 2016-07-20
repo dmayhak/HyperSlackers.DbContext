@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Diagnostics.Contracts;
+
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
 using System.Collections.Generic;
 
@@ -44,9 +44,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             AsyncHelper.RunSync(() => manager.CreateAsync(hostId, groupName, global));
         }
@@ -87,8 +87,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             AsyncHelper.RunSync(() => manager.CreateAsync(groupName, global));
         }
@@ -128,8 +128,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(group != null, "group");
 
             AsyncHelper.RunSync(() => manager.CreateAsync(group));
         }
@@ -169,8 +169,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(group != null, "group");
 
             AsyncHelper.RunSync(() => manager.DeleteAsync(group));
         }
@@ -210,8 +210,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(group != null, "group");
 
             AsyncHelper.RunSync(() => manager.UpdateAsync(group));
         }
@@ -252,8 +252,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             return AsyncHelper.RunSync(() => manager.FindByIdAsync(groupId));
         }
@@ -294,8 +294,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             return AsyncHelper.RunSync(() => manager.FindByNameAsync(groupName));
         }
@@ -337,9 +337,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!hostId.Equals(default(TKey)), "hostId");
-            Contract.Requires<ArgumentNullException>(!groupName.IsNullOrWhiteSpace(), "groupName");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!hostId.Equals(default(TKey)), "hostId");
+            Helpers.ThrowIfNull(!groupName.IsNullOrWhiteSpace(), "groupName");
 
             return AsyncHelper.RunSync(() => manager.FindByNameAsync(hostId, groupName));
         }
@@ -380,8 +380,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             return AsyncHelper.RunSync(() => manager.GetRolesAsync(groupId));
         }
@@ -422,8 +422,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(!groupId.Equals(default(TKey)), "groupId");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(!groupId.Equals(default(TKey)), "groupId");
 
             return AsyncHelper.RunSync(() => manager.GetUsersAsync(groupId));
         }
@@ -464,9 +464,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             AsyncHelper.RunSync(() => manager.AddRoleAsync(group, role));
         }
@@ -507,9 +507,9 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             where TAuditItem : HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty>, new()
             where TAuditProperty : HyperAuditProperty<TKey, TAudit, TAuditItem, TAuditProperty>, new()
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
-            Contract.Requires<ArgumentNullException>(group != null, "group");
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(manager != null, "manager");
+            Helpers.ThrowIfNull(group != null, "group");
+            Helpers.ThrowIfNull(role != null, "role");
 
             AsyncHelper.RunSync(() => manager.RemoveRoleAsync(group, role));
         }

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
-using System.Diagnostics.Contracts;
+
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -90,7 +90,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         protected HyperDbContextAuditing(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
 
             this.AuditSchemaName = string.Empty;
             this.AuditsTableName = string.Empty;
@@ -217,7 +217,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         public HyperEntityVersion<TKey, TEntity>[] GetEntityVersions<TEntity>(TEntity entity)
             where TEntity : IAuditable<TKey>
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
+            Helpers.ThrowIfNull(entity != null, "entity");
 
             var versions = new List<HyperEntityVersion<TKey, TEntity>>();
 
@@ -236,8 +236,6 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             foreach (var audit in audits)
             {
                 TEntity currentVersion = lastVersion.Copy();
-
-                Contract.Assume(currentVersion != null);
 
                 var auditItems = this.AuditItems
                     .Where(i => i.AuditId.Equals(audit.Id) && i.Entity1Id.Equals(entity.Id));
@@ -267,8 +265,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         public HyperEntityPropertyVersion<TKey>[] GetEntityPropertyVersions<TEntity>(TEntity entity, string propertyName)
             where TEntity : IAuditable<TKey>
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Requires<ArgumentNullException>(!propertyName.IsNullOrWhiteSpace(), "propertyName");
+            Helpers.ThrowIfNull(entity != null, "entity");
+            Helpers.ThrowIfNull(!propertyName.IsNullOrWhiteSpace(), "propertyName");
 
             var versions = new List<HyperEntityPropertyVersion<TKey>>();
 
@@ -313,8 +311,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <param name="auditItem">The audit item.</param>
         private void SetEntityProperty(IAuditable<TKey> entity, HyperAuditItem<TKey, TAudit, TAuditItem, TAuditProperty> auditItem)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Requires<ArgumentNullException>(auditItem != null, "auditItem");
+            Helpers.ThrowIfNull(entity != null, "entity");
+            Helpers.ThrowIfNull(auditItem != null, "auditItem");
 
             var auditProperty = this.AuditProperties.Single(p => p.Id.Equals(auditItem.AuditPropertyId));
 
@@ -349,13 +347,13 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
             foreach (var item in addedEntities)
             {
-                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableDate<TKey>;
+                IAssignDate<TKey> dateEntity = item.Entity as IAssignDate<TKey>;
                 if (dateEntity != null)
                 {
                     dateEntity.CreatedDate = this.auditDate;
                     dateEntity.LastChangedDate = this.auditDate;
 
-                    IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                    IAssignUserAndDate<TKey> userEntity = item.Entity as IAssignUserAndDate<TKey>;
                     if (userEntity != null)
                     {
                         userEntity.CreatedBy = userId;
@@ -369,12 +367,12 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             //var changedEntities = ChangeTracker.Entries().Where(e => e.State == EntityState.Modified);
             foreach (var item in changedEntities)
             {
-                IAuditableDate<TKey> dateEntity = item.Entity as IAuditableDate<TKey>;
+                IAssignDate<TKey> dateEntity = item.Entity as IAssignDate<TKey>;
                 if (dateEntity != null)
                 {
                     dateEntity.LastChangedDate = this.auditDate;
 
-                    IAuditableUserAndDate<TKey> userEntity = item.Entity as IAuditableUserAndDate<TKey>;
+                    IAssignUserAndDate<TKey> userEntity = item.Entity as IAssignUserAndDate<TKey>;
                     if (userEntity != null)
                     {
                         userEntity.LastChangedBy = userId;
@@ -708,8 +706,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private static Type GetEntityType(IEntity<TKey> entity)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Ensures(Contract.Result<Type>() != null);
+            Helpers.ThrowIfNull(entity != null, "entity");
 
             Type type = entity.GetType();
 
@@ -730,8 +727,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private static string GetEntityTypeName(IEntity<TKey> entity)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Ensures(Contract.Result<string>() != null);
+            Helpers.ThrowIfNull(entity != null, "entity");
 
             Type type = GetEntityType(entity);
 
@@ -746,9 +742,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private TAuditProperty GetAuditProperty(IAuditable<TKey> entity, PropertyInfo prop)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Requires<ArgumentNullException>(prop != null, "prop");
-            //x Contract.Ensures(Contract.Result<AuditProperty>() != null);
+            Helpers.ThrowIfNull(entity != null, "entity");
+            Helpers.ThrowIfNull(prop != null, "prop");
 
             string entityName = GetEntityTypeName(entity); // ObjectContext.GetObjectType(entity.GetType()).Name;
             string propertyName = prop.Name;
@@ -831,9 +826,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private TAuditProperty GetAuditProperty(IAuditable<TKey> entity, string propertyName)
         {
-            Contract.Requires<ArgumentNullException>(entity != null, "entity");
-            Contract.Requires<ArgumentNullException>(!propertyName.IsNullOrWhiteSpace(), "propertyName");
-            //x Contract.Ensures(Contract.Result<AuditProperty>() != null);
+            Helpers.ThrowIfNull(entity != null, "entity");
+            Helpers.ThrowIfNull(!propertyName.IsNullOrWhiteSpace(), "propertyName");
 
             string entityName = GetEntityTypeName(entity); // ObjectContext.GetObjectType(entity.GetType()).Name;
 
@@ -862,8 +856,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private TAuditProperty GetAuditProperty(System.Data.Entity.Core.Objects.DataClasses.IRelatedEnd relation)
         {
-            Contract.Requires<ArgumentNullException>(relation != null, "relation");
-            Contract.Ensures(Contract.Result<TAuditProperty>() != null);
+            Helpers.ThrowIfNull(relation != null, "relation");
 
             string relationName = relation.RelationshipSet.Name;
             string propertyName = string.Empty;
@@ -896,8 +889,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         /// <returns></returns>
         private ObjectStateEntry GetEntityEntryFromRelation(ObjectStateEntry relationEntry, int index)
         {
-            Contract.Requires<ArgumentNullException>(relationEntry != null, "relationEntry");
-            Contract.Ensures(Contract.Result<ObjectStateEntry>() != null);
+            Helpers.ThrowIfNull(relationEntry != null, "relationEntry");
 
             System.Data.Entity.Core.EntityKey firstKey;
             if (relationEntry.State == System.Data.Entity.EntityState.Deleted)

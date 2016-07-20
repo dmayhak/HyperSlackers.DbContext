@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
-using System.Diagnostics.Contracts;
+
 using System.ComponentModel;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
@@ -80,7 +80,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         protected HyperDbContextMultiHost(string nameOrConnectionString)
             : base(nameOrConnectionString)
         {
-            Contract.Requires<ArgumentNullException>(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
+            Helpers.ThrowIfNull(!nameOrConnectionString.IsNullOrWhiteSpace(), "nameOrConnectionString");
 
             this.MultiHostEnabled = true;
         }
@@ -289,7 +289,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
         private List<DbValidationError> ValidateUser(TUser user)
         {
-            Contract.Requires<ArgumentNullException>(user != null, "user");
+            Helpers.ThrowIfNull(user != null, "user");
 
             var errors = new List<DbValidationError>();
 
@@ -364,7 +364,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
         private List<DbValidationError> ValidateRole(TRole role)
         {
-            Contract.Requires<ArgumentNullException>(role != null, "role");
+            Helpers.ThrowIfNull(role != null, "role");
 
             var errors = new List<DbValidationError>();
 

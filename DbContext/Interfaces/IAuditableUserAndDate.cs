@@ -11,21 +11,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     /// Logs data changes as well as who made the change and when.
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
-    public interface IAuditableUserAndDate<TKey> : IAuditableDate<TKey>
+    public interface IAuditableUserAndDate<TKey> : IAssignUserAndDate<TKey>
     {
-        /// <summary>
-        /// Gets or sets the id of the user who created the entity.
-        /// </summary>
-        /// <value>
-        /// The created by.
-        /// </value>
-        TKey CreatedBy { get; set; }
-        /// <summary>
-        /// Gets or sets the last editor's user id.
-        /// </summary>
-        /// <value>
-        /// The last changed by.
-        /// </value>
-        TKey LastChangedBy { get; set; }
     }
 }

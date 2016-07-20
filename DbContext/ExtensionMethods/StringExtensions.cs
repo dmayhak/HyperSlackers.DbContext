@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +14,6 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        [Pure]
         public static bool IsNullOrEmpty(this String value)
         {
             return string.IsNullOrEmpty(value);
@@ -25,7 +24,6 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-        [Pure]
         public static bool IsNullOrWhiteSpace(this String value)
         {
             return string.IsNullOrWhiteSpace(value);

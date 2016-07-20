@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
@@ -77,7 +77,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <RunCodeAnalysis>true</RunCodeAnalysis>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
@@ -130,12 +130,12 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <CodeContractsEnableRuntimeChecking>True</CodeContractsEnableRuntimeChecking>
+    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
     <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
     <CodeContractsRuntimeThrowOnFailure>True</CodeContractsRuntimeThrowOnFailure>
     <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
     <CodeContractsRuntimeSkipQuantifiers>False</CodeContractsRuntimeSkipQuantifiers>
-    <CodeContractsRunCodeAnalysis>True</CodeContractsRunCodeAnalysis>
+    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
     <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
     <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
     <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
@@ -238,6 +238,7 @@
     <Compile Include="Attributes\ChildAttribute.cs" />
     <Compile Include="Attributes\ConvertNullToEmptyStringAttribute.cs" />
     <Compile Include="Core\FormattedDbEntityValidationException.cs" />
+    <Compile Include="Core\Helpers.cs" />
     <Compile Include="Core\HyperDbContextAuditing.cs" />
     <Compile Include="Core\HyperDbContextMultiHost.cs" />
     <Compile Include="Core\HyperDbContextGroups.cs" />
@@ -274,12 +275,15 @@
     <Compile Include="Entities\HyperUser.cs" />
     <Compile Include="Entities\HyperUserClaim.cs" />
     <Compile Include="Entities\HyperUserLogin.cs" />
+    <Compile Include="HyperTokenProvider.cs" />
     <Compile Include="HyperUserManager.cs" />
     <Compile Include="Entities\HyperUserRole.cs" />
     <Compile Include="HyperUserStore.cs" />
     <Compile Include="HyperUserValidator.cs" />
     <Compile Include="Interfaces\IAuditable.cs" />
+    <Compile Include="Interfaces\IAssignDate.cs" />
     <Compile Include="Interfaces\IAuditableDate.cs" />
+    <Compile Include="Interfaces\IAssignUserAndDate.cs" />
     <Compile Include="Interfaces\IAuditableUserAndDate.cs" />
     <Compile Include="Interfaces\IEntity.cs" />
     <Compile Include="Interfaces\IHyperRole.cs" />

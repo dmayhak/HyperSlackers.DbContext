@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Diagnostics.Contracts;
+
 using System.Data.Entity;
 using HyperSlackers.AspNet.Identity.EntityFramework.ExtensionMethods;
 
@@ -23,7 +23,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperHostManagerGuid(HyperHostStoreGuid<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -41,7 +41,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperHostManagerInt(HyperHostStoreInt<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -59,7 +59,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperHostManagerLong(HyperHostStoreLong<TUser> store)
             : base(store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
         }
     }
 
@@ -109,7 +109,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="store">The store.</param>
         public HyperHostManager(HyperHostStore<THost, THostDomain, TKey, TUser, TRole, TUserLogin, TUserRole, TUserClaim, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> store)
         {
-            Contract.Requires<ArgumentNullException>(store != null, "store");
+            Helpers.ThrowIfNull(store != null, "store");
 
             this.HyperHostStore = store;
         }
@@ -133,7 +133,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task CreateAsync(THost host)
         {
-            Contract.Requires<ArgumentNullException>(host != null, "host");
+            Helpers.ThrowIfNull(host != null, "host");
 
             ThrowIfDisposed();
 
@@ -154,7 +154,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task DeleteAsync(THost host)
         {
-            Contract.Requires<ArgumentNullException>(host != null, "host");
+            Helpers.ThrowIfNull(host != null, "host");
 
             ThrowIfDisposed();
 
@@ -168,7 +168,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task UpdateAsync(THost host)
         {
-            Contract.Requires<ArgumentNullException>(host != null, "host");
+            Helpers.ThrowIfNull(host != null, "host");
 
             ThrowIfDisposed();
 
@@ -189,7 +189,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<THost> FindByIdAsync(TKey hostId)
         {
-            Contract.Requires<ArgumentNullException>(!MultiHostEnabled || !hostId.Equals(default(TKey)));
+            Helpers.ThrowIfNull(!MultiHostEnabled || !hostId.Equals(default(TKey)), "hostId");
 
             ThrowIfDisposed();
 
@@ -203,7 +203,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<THost> FindByNameAsync(string hostName)
         {
-            Contract.Requires<ArgumentNullException>(!hostName.IsNullOrWhiteSpace(), "hostName");
+            Helpers.ThrowIfNull(!hostName.IsNullOrWhiteSpace(), "hostName");
 
             ThrowIfDisposed();
 
@@ -217,7 +217,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public async Task<THost> FindByDomainAsync(string domainName)
         {
-            Contract.Requires<ArgumentNullException>(!domainName.IsNullOrWhiteSpace(), "domainName");
+            Helpers.ThrowIfNull(!domainName.IsNullOrWhiteSpace(), "domainName");
 
             ThrowIfDisposed();
 
@@ -256,8 +256,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <exception cref="System.ArgumentException"></exception>
         public virtual async Task AddDomainAsync(THost host, string domainName)
         {
-            Contract.Requires<ArgumentNullException>(host != null, "host");
-            Contract.Requires<ArgumentNullException>(!domainName.IsNullOrWhiteSpace(), "domainName");
+            Helpers.ThrowIfNull(host != null, "host");
+            Helpers.ThrowIfNull(!domainName.IsNullOrWhiteSpace(), "domainName");
 
             ThrowIfDisposed();
 
@@ -271,7 +271,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public virtual async Task RemoveDomainAsync(string domainName)
         {
-            Contract.Requires<ArgumentNullException>(!domainName.IsNullOrWhiteSpace(), "domainName");
+            Helpers.ThrowIfNull(!domainName.IsNullOrWhiteSpace(), "domainName");
 
             ThrowIfDisposed();
 

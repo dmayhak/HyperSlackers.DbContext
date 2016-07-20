@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
+
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserValidatorGuid(HyperUserManagerGuid<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -43,7 +43,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserValidatorInt(HyperUserManagerInt<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -61,7 +61,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserValidatorLong(HyperUserManagerLong<TUser> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
         }
     }
 
@@ -138,7 +138,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         public HyperUserValidator(HyperUserManager<TUser, TRole, TKey, TUserLogin, TUserRole, TUserClaim, THost, THostDomain, TRoleGroup, TRoleGroupRole, TRoleGroupUser, TAudit, TAuditItem, TAuditProperty> manager)
             : base(manager)
         {
-            Contract.Requires<ArgumentNullException>(manager != null, "manager");
+            Helpers.ThrowIfNull(manager != null, "manager");
 
             MinimumUserNameLength = 6;
             MaximumUserNameLength = 50;
@@ -153,7 +153,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <returns></returns>
         public override async Task<IdentityResult> ValidateAsync(TUser item)
         {
-            Contract.Requires<ArgumentNullException>(item != null, "item");
+            Helpers.ThrowIfNull(item != null, "item");
             //if (item == null)
             //{
             //    throw new ArgumentNullException("item");
@@ -175,8 +175,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
         private async Task ValidateUserName(TUser user, List<string> errors)
         {
-            Contract.Requires<ArgumentNullException>(user != null, "user");
-            Contract.Requires<ArgumentNullException>(errors != null, "errors");
+            Helpers.ThrowIfNull(user != null, "user");
+            Helpers.ThrowIfNull(errors != null, "errors");
 
             if (user.UserName.IsNullOrWhiteSpace() || user.UserName.Trim().Length < MinimumUserNameLength)
             {
@@ -248,8 +248,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         // make sure email is not empty, is valid, and is unique
         private async Task ValidateEmailAsync(TUser user, List<string> errors)
         {
-            Contract.Requires<ArgumentNullException>(user != null, "user");
-            Contract.Requires<ArgumentNullException>(errors != null, "errors");
+            Helpers.ThrowIfNull(user != null, "user");
+            Helpers.ThrowIfNull(errors != null, "errors");
 
             var email = await Manager.HyperUserStore.GetEmailAsync(user).WithCurrentCulture();
             if (email.IsNullOrWhiteSpace())
