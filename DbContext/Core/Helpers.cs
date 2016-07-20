@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HyperSlackers.AspNet.Identity.EntityFramework
+namespace HyperSlackers
 {
     internal static class Helpers
     {
