@@ -63,6 +63,18 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool AuditingEnabled { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether the LastChangedDate, LastChangedBy,
+        /// CreateDate, and CreatedBy fields are automatically set or allowed to be set
+        /// by the calling application.
+        /// Useful for data import/migration programs to keep the data in sync with source.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if user/date auditing is enabled; otherwise, <c>false</c>.
+        /// </value>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool AuditUserAndDateEnabled { get; set; }
+
         //! audit creation
         private DateTime auditDate;
         private TAudit currentAudit;
@@ -98,6 +110,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
             this.AuditPropertiesTableName = string.Empty;
 
             this.AuditingEnabled = true;
+            this.AuditUserAndDateEnabled = true;
         }
 
         /// <summary>
@@ -143,7 +156,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
             ChangeTracker.DetectChanges(); //! important to call this prior to auditing, etc.
 
-            UpdateAuditUserAndDateFields(); // last changed date/by, created date/by, etc...
+            if (AuditUserAndDateEnabled)
+            {
+                UpdateAuditUserAndDateFields(); // last changed date/by, created date/by, etc...
+            }
 
             // short-circuit if disabled
             if (!AuditingEnabled)
@@ -169,7 +185,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
 
             ChangeTracker.DetectChanges(); //! important to call this prior to auditing, etc.
 
-            UpdateAuditUserAndDateFields(); // last changed date/by, created date/by, etc...
+            if (AuditUserAndDateEnabled)
+            {
+                UpdateAuditUserAndDateFields(); // last changed date/by, created date/by, etc...
+            }
 
             // short-circuit if disabled
             if (!AuditingEnabled)
