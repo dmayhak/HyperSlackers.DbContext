@@ -18,7 +18,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
 
             // turn off clustered index for all PKs (except for migration history)
-            if (!addPrimaryKeyOperation.Table.Contains("__MigrationHistory"))
+            if ((!addPrimaryKeyOperation.Table.Contains("__MigrationHistory"))
+                && (!addPrimaryKeyOperation.Table.Contains("AspNetUserClaims")))
             {
                 addPrimaryKeyOperation.IsClustered = false;
             }
@@ -35,7 +36,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
 
             // turn off clustered index for all PKs (except for migration history)
-            if (!createTableOperation.Name.Contains("__MigrationHistory"))
+            if ((!createTableOperation.Name.Contains("__MigrationHistory"))
+                && (!createTableOperation.Name.Contains("AspNetUserClaims")))
             {
                 createTableOperation.PrimaryKey.IsClustered = false;
             }
@@ -51,7 +53,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
             }
 
             // turn off clustered index for all PKs (except for migration history)
-            if (!moveTableOperation.CreateTableOperation.Name.Contains("__MigrationHistory"))
+            if ((!moveTableOperation.CreateTableOperation.Name.Contains("__MigrationHistory"))
+                && (!moveTableOperation.CreateTableOperation.Name.Contains("AspNetUserClaims")))
             {
                 moveTableOperation.CreateTableOperation.PrimaryKey.IsClustered = false;
             }

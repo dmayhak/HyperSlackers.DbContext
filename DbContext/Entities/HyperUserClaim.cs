@@ -37,11 +37,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
     public class HyperUserClaim<TKey> : IdentityUserClaim<TKey>, IHyperUserClaim<TKey>
         where TKey : struct, IEquatable<TKey>
     {
-
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Index("IX_ClusteredKey", IsClustered = true)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public long ClusteredKey { get; protected set; }
+        //[EditorBrowsable(EditorBrowsableState.Never)]
+        //[Index("IX_ClusteredKey", IsClustered = true)]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public long ClusteredKey { get; protected set; }
 
         /// <summary>
         /// Gets or sets the host identifier.
