@@ -107,9 +107,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework.Core
                 .Property(r => r.Id)
                 .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
             // TUserClaim (IdentityUserClaim) has int as the data type for Id
-            modelBuilder.Entity<TUserClaim>()
-                .Property(r => r.Id)
-                .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
+            // DRM: UserClaim has PK of int and needs the DB generated option to stay on. MS does not use TKey as the PK for this entity
+            //modelBuilder.Entity<TUserClaim>()
+            //    .Property(r => r.Id)
+            //    .HasDatabaseGeneratedOption((typeof(TKey) == typeof(Guid) || typeof(TKey) == typeof(string)) ? DatabaseGeneratedOption.None : DatabaseGeneratedOption.Identity);
 
 
 
