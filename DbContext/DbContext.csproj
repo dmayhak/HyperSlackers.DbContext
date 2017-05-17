@@ -231,7 +231,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AsyncHelper.cs" />
     <Compile Include="Attributes\AuditIgnoreAttribute.cs" />
     <Compile Include="Attributes\CascadeDeleteAttribute.cs" />
     <Compile Include="Attributes\CascadeDeleteAttributeConvention.cs" />
@@ -253,12 +252,9 @@
     <Compile Include="Entities\HyperHost.cs" />
     <Compile Include="Entities\HyperHostDomain.cs" />
     <Compile Include="Entities\HyperRoleGroup.cs" />
-    <Compile Include="ExtensionMethods\GroupManagerExtensions.cs" />
     <Compile Include="ExtensionMethods\ObjectExtensions.cs" />
-    <Compile Include="ExtensionMethods\HostManagerExtensions.cs" />
     <Compile Include="ExtensionMethods\RoleManagerExtensions.cs" />
     <Compile Include="ExtensionMethods\TaskExtensions.cs" />
-    <Compile Include="ExtensionMethods\UserManagerExtensions.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Core\HyperDbContextBase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
