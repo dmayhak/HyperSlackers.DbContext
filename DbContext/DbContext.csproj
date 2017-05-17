@@ -253,7 +253,6 @@
     <Compile Include="Entities\HyperHostDomain.cs" />
     <Compile Include="Entities\HyperRoleGroup.cs" />
     <Compile Include="ExtensionMethods\ObjectExtensions.cs" />
-    <Compile Include="ExtensionMethods\RoleManagerExtensions.cs" />
     <Compile Include="ExtensionMethods\TaskExtensions.cs" />
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Core\HyperDbContextBase.cs" />
