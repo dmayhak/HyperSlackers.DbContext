@@ -54,7 +54,7 @@ namespace HyperSlackers.AspNet.Identity
             {
                 var currentCulture = Thread.CurrentThread.CurrentCulture;
                 var currentUiCulture = Thread.CurrentThread.CurrentUICulture;
-                _task.ConfigureAwait(false).GetAwaiter().UnsafeOnCompleted(() =>
+                _task.GetAwaiter().UnsafeOnCompleted(() =>
                 {
                     var originalCulture = Thread.CurrentThread.CurrentCulture;
                     var originalUiCulture = Thread.CurrentThread.CurrentUICulture;
@@ -107,7 +107,7 @@ namespace HyperSlackers.AspNet.Identity
             {
                 var currentCulture = Thread.CurrentThread.CurrentCulture;
                 var currentUiCulture = Thread.CurrentThread.CurrentUICulture;
-                _task.ConfigureAwait(false).GetAwaiter().UnsafeOnCompleted(() =>
+                _task.GetAwaiter().UnsafeOnCompleted(() =>
                 {
                     var originalCulture = Thread.CurrentThread.CurrentCulture;
                     var originalUiCulture = Thread.CurrentThread.CurrentUICulture;

@@ -200,7 +200,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                     return;
                 }
             }
-            else if (AllowOnlyAlphanumericUserNames && !Regex.IsMatch(user.UserName, @"^[A-Za-z0-9@_\.]+$"))
+            else if (AllowOnlyAlphanumericUserNames && !Regex.IsMatch(user.UserName, @"^[A-Za-z0-9@_\.-]+$"))
             {
                 // If any characters are not letters or digits, its an illegal user name
                 errors.Add("UserName is invalid");

@@ -154,7 +154,10 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
                             if (contextUser != null)
                             {
                                 var userId = contextUser.Identity.GetUserId();
-                                currentUser = this.Set<TUser>().SingleOrDefault(u => u.Id.ToString().ToUpper() == userId.ToUpper());
+                                TKey id = (TKey)TypeDescriptor.GetConverter(typeof(TKey)).ConvertFromInvariantString(userId);
+
+                                //currentUser = this.Set<TUser>().SingleOrDefault(u => u.Id.ToString().ToUpper() == userId.ToUpper());
+                                currentUser = this.Set<TUser>().SingleOrDefault(u => u.Id.Equals(id));
                             }
                         }
                     }

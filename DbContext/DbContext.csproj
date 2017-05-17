@@ -262,6 +262,7 @@
     <Compile Include="ExtensionMethods\StringExtensions.cs" />
     <Compile Include="Core\HyperDbContextBase.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="HyperClaimsIdentityFactory.cs" />
     <Compile Include="HyperRoleGroupManager.cs" />
     <Compile Include="HyperHostManager.cs" />
     <Compile Include="HyperHostStore.cs" />

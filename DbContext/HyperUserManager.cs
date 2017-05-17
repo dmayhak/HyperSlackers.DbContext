@@ -124,6 +124,8 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             // allow duplicate emails and funky chars
             this.UserValidator = new UserValidator<TUser, TKey>(this) { AllowOnlyAlphanumericUserNames = false, RequireUniqueEmail = false };
+
+            this.ClaimsIdentityFactory = new HyperClaimsIdentityFactory<TUser, TUserLogin, TUserRole, TUserClaim, TRoleGroupUser, TKey>();
         }
 
         /// <summary>
@@ -1012,7 +1014,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
         /// <param name="user">The user.</param>
         /// <param name="authenticationType">the authentication type.</param>
         /// <returns></returns>
-        public override async Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
+        public override Task<ClaimsIdentity> CreateIdentityAsync(TUser user, string authenticationType)
         {
             //x Helpers.ThrowIfNull(user != null, "user");
             //x Helpers.ThrowIfNull(!authenticationType.IsNullOrWhiteSpace(), "authenticationType");
@@ -1021,7 +1023,7 @@ namespace HyperSlackers.AspNet.Identity.EntityFramework
 
             //TODO: any custom logic here?
 
-            return await base.CreateIdentityAsync(user, authenticationType);
+            return base.CreateIdentityAsync(user, authenticationType);
         }
 
         /// <summary>
